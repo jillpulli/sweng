@@ -1,5 +1,6 @@
 package agile;
 
+import agile.model.DataRecord;
 import agile.util.DelimitedFileParser;
 
 import java.io.File;
@@ -23,8 +24,10 @@ public class Main {
         }
 
         System.out.println("Reading data from file: " + file.getName());
-        List<Map<String, String>> records =
+
+        DataRecord<String, String> records =
             DelimitedFileParser.parse(file, "\t");
+
         System.out.println("Number of records: " + records.size());
     }
 }
