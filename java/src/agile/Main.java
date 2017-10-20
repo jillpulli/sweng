@@ -1,10 +1,10 @@
 package agile;
 
+import agile.model.DataRecord;
 import agile.util.DelimitedFileParser;
+import agile.view.TextIO;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
 
 public class Main {
 
@@ -22,9 +22,32 @@ public class Main {
             return;
         }
 
-        System.out.println("Reading data from file: " + file.getName());
-        List<Map<String, String>> records =
+        System.out.println("\nReading data from file: " + file.getName());
+        DataRecord<String, String> records =
             DelimitedFileParser.parse(file, "\t");
-        System.out.println("Number of records: " + records.size());
+        String[] headers = records.getHeaders();
+        int numRecords = records.size();
+        System.out.println("System ready with " + numRecords + " records.");
+
+        TextIO<DataRecord<String, String>> program = new TextIO<>();
+        program.run(records, (rec) -> {
+            System.out.println();
+            int row = program.getIntegerInput(
+                "Enter row number (" + 0 + " to " + (numRecords - 1) + ")",
+                0, numRecords
+            );
+            System.out.println("\n-- Columns --");
+            program.printUnorderedList(headers);
+            String column = program.getInput("Enter a column name");
+            System.out.println();
+            String value = rec.getDataValue(row, column);
+            if (value != null)
+                if (value.isEmpty()) System.out.println("<No value>");
+                else System.out.println(value);
+            else
+                System.out.println("\tError: No such column");
+            // Only exit on EOF.
+            return true;
+        });
     }
 }
