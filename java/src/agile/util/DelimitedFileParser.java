@@ -16,9 +16,7 @@ public class DelimitedFileParser {
         try (BufferedReader reader =
                 new BufferedReader(
                 new FileReader(file))) {
-            dataRecord.setHeaders(
-                Arrays.asList(reader.readLine().split(delimiter))
-            );
+            dataRecord.setHeaders(reader.readLine().split(delimiter));
             int numHeaders = dataRecord.getNumberOfHeaders();
 
             String line;
