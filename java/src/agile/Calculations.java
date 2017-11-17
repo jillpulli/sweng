@@ -12,17 +12,20 @@ import java.util.Map;
 public class Calculations
 {
     // This needs to make the map of maps into a to string so that it can print so we can test
+    /*
     public static String toString(Map<String, Map<String, Integer>> mp)
     {
-        Iterator it = mp.entrySet().iterator();
-        while (it.hasNext())
+        for (String key : mp.keySet())
         {
-            Map.Entry pair = (Map.Entry)it.next();
-            // not done yet
-        }
-        return " ";
-    }
+            System.out.println("------------------------------------------------");
+            System.out.println("New Department " + mp.get(key) + " has ");
 
+            for (String innerKey : key.keySet)
+            {
+                System.out.print(" " + key + " with a size of " + mp.get(key) + "   ");
+            }
+        }
+    }*/
 
     public static Map<String, Map<String, Integer >> calc2(ArrayList< Map<String, String> > database)
     {
@@ -109,9 +112,11 @@ public class Calculations
         db.add(h2);
         db.add(h3);
         db.add(h4);
-
+        System.out.println("added HashMaps to Array");
        // System.out.println(db);
-
+        // Should print in this format
+        // Department: ProgramKey: Size , ProgramKey: Size,
+        // AnotherDepartment: ProgramKey: Size , ProgramKeyD: Size,
 
     }
 }
