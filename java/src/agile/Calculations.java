@@ -4,15 +4,40 @@ package agile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class Calculations
 {
-
-    public static HashMap<String, HashMap<String, Integer >> calc2(ArrayList< HashMap<String, String> > database)
+    public static String makeTable(List<Map<String, String>> features)
     {
-        HashMap<String,String> currentFeature = new HashMap<>();
-        HashMap<String, Integer> deptProgFeats = new HashMap<>();
-        HashMap<String, HashMap<String, Integer>> deptwork = new HashMap<>();
+        String table = "";
+        for (Map<String, String> feature : features) {
+            Iterator<String> it = feature.keySet().iterator();
+            while (it.hasNext())
+                table += feature.get(it.next()) + (it.hasNext() ? '\t' : '\n');
+        }
+        return table;
+    }
+
+    /*public static Map<String, String> makeIntoMapofStrings(Map<String, Map<String, Integer>> mp)
+    {
+        Iterator it = mp.entrySet().iterator();
+        while (it.hasNext())
+        {
+            Map.Entry pair = (Map.Entry)it.next();
+            // not done yet
+        }
+    }*/
+
+
+    public static Map<String, Map<String, Integer >> calc2(ArrayList< Map<String, String> > database)
+    {
+        Map<String,String> currentFeature = new HashMap<>();
+        Map<String, Integer> deptProgFeats = new HashMap<>();
+        Map<String, Map<String, Integer>> deptwork = new HashMap<>();
 
         String ProgramFeatureName ="";
         int currentSize = 0;
@@ -60,41 +85,43 @@ public class Calculations
 
     public static void main (String[] args)
     {
-        HashMap<String, String> h1 = new HashMap<>();
+        Map<String, String> h1 = new HashMap<>();
         h1.put("Feature Key", "CSLPRE-124");
         h1.put("Program Key", "CSLPRE-124");
         h1.put("Department Key", "CSLP_Radar_Enhancement");
         h1.put("Level", "0");
         h1.put("Current Size", "233");
 
-        HashMap<String, String> h2 = new HashMap<>();
+        Map<String, String> h2 = new HashMap<>();
         h1.put("Feature Key", "ORTS-37410");
         h1.put("Program Key", "CSLPRE-124");
         h1.put("Department Key", "CSL_ORTS");
         h1.put("Level", "1");
         h1.put("Current Size", "20");
 
-        HashMap<String, String> h3 = new HashMap<>();
+        Map<String, String> h3 = new HashMap<>();
         h1.put("Feature Key", "ORTS-37435");
         h1.put("Program Key", "CSLPRE-124");
         h1.put("Department Key", "CSL_ORTS");
         h1.put("Level", "1");
         h1.put("Current Size", "13");
 
-        HashMap<String, String> h4 = new HashMap<>();
+        Map<String, String> h4 = new HashMap<>();
         h1.put("Feature Key", "CSLSPY-94638");
         h1.put("Program Key", "CSLPRE-124");
         h1.put("Department Key", "CSL_SPY");
         h1.put("Level", "0");
         h1.put("Current Size", "60");
 
-        ArrayList<HashMap<String, String>> db = new ArrayList<HashMap<String, String>>();
+        ArrayList< Map<String, String>> db = new ArrayList<Map<String, String>>();
         db.add(h1);
         db.add(h2);
         db.add(h3);
         db.add(h4);
 
-        HashMap<String, HashMap<String, Integer >> finalHashMap = calc2(db);
+        Map<String, Map<String, Integer >> finalHashMap = calc2(db);
+       // System.out.println(makeTable(finalHashMap));
+
 
     }
 }
