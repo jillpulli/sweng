@@ -11,18 +11,8 @@ import java.util.Map;
 
 public class Calculations
 {
-    public static String makeTable(List<Map<String, String>> features)
-    {
-        String table = "";
-        for (Map<String, String> feature : features) {
-            Iterator<String> it = feature.keySet().iterator();
-            while (it.hasNext())
-                table += feature.get(it.next()) + (it.hasNext() ? '\t' : '\n');
-        }
-        return table;
-    }
-
-    /*public static Map<String, String> makeIntoMapofStrings(Map<String, Map<String, Integer>> mp)
+    // This needs to make the map of maps into a to string so that it can print so we can test
+    public static String toString(Map<String, Map<String, Integer>> mp)
     {
         Iterator it = mp.entrySet().iterator();
         while (it.hasNext())
@@ -30,7 +20,8 @@ public class Calculations
             Map.Entry pair = (Map.Entry)it.next();
             // not done yet
         }
-    }*/
+        return " ";
+    }
 
 
     public static Map<String, Map<String, Integer >> calc2(ArrayList< Map<String, String> > database)
@@ -119,8 +110,7 @@ public class Calculations
         db.add(h3);
         db.add(h4);
 
-        Map<String, Map<String, Integer >> finalHashMap = calc2(db);
-       // System.out.println(makeTable(finalHashMap));
+       // System.out.println(db);
 
 
     }
