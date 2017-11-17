@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.lang.NumberFormatException;
 import java.util.function.Predicate;
+import java.util.List;
 
 public class TextIO<T> {
 
@@ -53,9 +54,9 @@ public class TextIO<T> {
         return getIntegerInput(">> Make your selection now", 1, len);
     }
 
-    public void printUnorderedList(String[] items) {
-        for (int i = 0, len = items.length; i < len; i++)
-            System.out.println("\t* " + items[i]);
+    public void printList(List<String> items) {
+        for (int i = 0, len = items.size(); i < len; i++)
+            System.out.println("\t* " + items.get(i));
     }
 
     public void run(T object, Predicate<T> programFlow) {

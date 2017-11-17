@@ -1,10 +1,11 @@
 package agile;
 
-import agile.model.DataRecord;
 import agile.util.DelimitedFileParser;
-import agile.view.TextIO;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -22,32 +23,33 @@ public class Main {
             return;
         }
 
-        System.out.println("\nReading data from file: " + file.getName());
-        DataRecord<String, String> records =
+        // System.out.println("\nReading data from file: " + file.getName());
+        List<Map<String, String>> features =
             DelimitedFileParser.parse(file, "\t");
-        String[] headers = records.getHeaders();
-        int numRecords = records.size();
-        System.out.println("System ready with " + numRecords + " records.");
 
-        TextIO<DataRecord<String, String>> program = new TextIO<>();
-        program.run(records, (rec) -> {
-            System.out.println();
-            int row = program.getIntegerInput(
-                "Enter row number (" + 0 + " to " + (numRecords - 1) + ")",
-                0, numRecords
-            );
-            System.out.println("\n-- Columns --");
-            program.printUnorderedList(headers);
-            String column = program.getInput("Enter a column name");
-            System.out.println();
-            String value = rec.getDataValue(row, column);
-            if (value != null)
-                if (value.isEmpty()) System.out.println("<No value>");
-                else System.out.println(value);
-            else
-                System.out.println("\tError: No such column");
-            // Only exit on EOF.
-            return true;
-        });
+        // System.out.println("System ready with " + features.size() + " features.");
+
+        addProgramKey(features);
+        System.out.println(makeTable(features));
+    }
+
+    public static void addProgramKey(List<Map<String, String>> features) {
+        String currentProgram = "";
+        for (int i = 0, size = features.size(); i < size; i++) {
+            Map<String, String> feature = features.get(i);
+            if (feature.get("Level").equals("0"))
+                currentProgram = feature.get("Key");
+            feature.put("Program Key", currentProgram);
+        }
+    }
+
+    public static String makeTable(List<Map<String, String>> features) {
+        String table = "";
+        for (Map<String, String> feature : features) {
+            Iterator<String> it = feature.keySet().iterator();
+            while (it.hasNext())
+                table += feature.get(it.next()) + (it.hasNext() ? '\t' : '\n');
+        }
+        return table;
     }
 }
