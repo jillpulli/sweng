@@ -37,9 +37,17 @@ public class Main {
         String currentProgram = "";
         for (int i = 0, size = features.size(); i < size; i++) {
             Map<String, String> feature = features.get(i);
-            if (feature.get("Level").equals("0"))
+            String level = feature.get("Level");
+            if (level.equals("0"))
                 currentProgram = feature.get("Key");
             feature.put("Program Key", currentProgram);
+            int next = i + 1;
+            if (next == size && !level.equals("0"))
+                feature.put("Leaf", "Leaf");
+            else if (level.compareTo(features.get(next).get("Level")) < 0)
+                feature.put("Leaf", "Root");
+            else
+                feature.put("Leaf", "Leaf");
         }
     }
 
@@ -52,4 +60,20 @@ public class Main {
         }
         return table;
     }
+
+/*
+    public static Map<String, Map<String, Integer>> calculateInCapacity(
+            List<Map<String, String>> features)
+        Map<String, Map<String, Integer>> sumInCapacity = new HashMap<>();
+        for (Map<String, String> feature : features) {
+            if (feature.get("Leaf").equals("Leaf") &&
+                    feature.get("Fix Version/s").contains("InCapacity")) {
+                String program = feature.get("Program Key");
+                String department = feature.get("Project");
+                if (!sumInCapacity.containsKey(program)) {
+                    sumInCapacity.put(program, new HashMap<String, Integer>());
+                    sumInCapacity.get(program).put(department, 0);
+                }
+            }
+*/
 }
