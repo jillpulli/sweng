@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Calculations
 {
+
     public static HashMap<String, HashMap<String, Integer >> calc2(ArrayList< HashMap<String, String> > database)
     {
         HashMap<String,String> currentFeature = new HashMap<>();
@@ -53,6 +54,9 @@ public class Calculations
         }
         return deptwork;
     }
+
+
+
 
     public static void main (String[] args)
     {
