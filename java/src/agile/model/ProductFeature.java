@@ -18,6 +18,16 @@ public class ProductFeature extends Feature
         teamFTCollection = teamFTs;
     }
 
+    public Boolean getIsRoot()
+    {
+        return isRoot;
+    }
+
+    public Map<String, TeamFeature> getTeamFTCollection()
+    {
+        return teamFTCollection;
+    }
+
     public void printFeature()
     {
         System.out.println("This print will be specific to this type of a feature!!");
