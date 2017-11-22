@@ -15,7 +15,7 @@ public class FeatureAggregator implements AgileObject {
     public double getCurrentSize() {
         return featureMap
             .values()
-            .stream()
+            .parallelStream()
             .mapToDouble(set -> set.getCurrentSize())
             .sum();
     }
@@ -24,7 +24,7 @@ public class FeatureAggregator implements AgileObject {
     public double getInCapacitySize() {
         return featureMap
             .values()
-            .stream()
+            .parallelStream()
             .mapToDouble(set -> set.getInCapacitySize())
             .sum();
     }

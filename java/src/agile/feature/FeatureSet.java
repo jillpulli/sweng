@@ -10,7 +10,7 @@ public class FeatureSet implements AgileObject {
     @Override
     public double getCurrentSize() {
         return features
-            .stream()
+            .parallelStream()
             .mapToDouble(feature -> feature.getCurrentSize())
             .sum();
     }
@@ -18,7 +18,7 @@ public class FeatureSet implements AgileObject {
     @Override
     public double getInCapacitySize() {
         return features
-            .stream()
+            .parallelStream()
             .mapToDouble(feature -> feature.getInCapacitySize())
             .sum();
     }
