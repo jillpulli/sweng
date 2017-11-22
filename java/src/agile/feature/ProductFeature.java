@@ -1,7 +1,6 @@
 package agile.feature;
 
-public class ProductFeature extends CapacityFeature
-implements FeatureCollection {
+public class ProductFeature extends CapacityFeature {
 
     private double currentSize;
     private FeatureSet features = new FeatureSet();
@@ -25,23 +24,11 @@ implements FeatureCollection {
         return 0;
     }
 
-    @Override
     public boolean addFeature(Feature feature) {
         return features.addFeature(feature);
     }
 
-    @Override
-    public int getNumberOfFeatures() {
-        return features.getNumberOfFeatures();
-    }
-
-    @Override
     public boolean isEmpty() {
         return features.isEmpty();
-    }
-
-    @Override
-    public boolean removeFeature(Feature feature) {
-        return features.removeFeature(feature);
     }
 }

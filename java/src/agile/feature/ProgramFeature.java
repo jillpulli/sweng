@@ -1,13 +1,10 @@
 package agile.feature;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class ProgramFeature extends Feature implements FeatureCollection {
+public class ProgramFeature extends Feature {
 
     private String summary;
     private int priorityScore;
-    private Map<String, FeatureSet> projects = new HashMap<>();
+    private FeatureAggregator projects = new FeatureAggregator();
 
     public ProgramFeature(String key, String summary, int priorityScore) {
         super(key);
@@ -23,62 +20,25 @@ public class ProgramFeature extends Feature implements FeatureCollection {
         return priorityScore;
     }
 
+    public AgileObject getProject(String projectName) {
+        return projects.get(projectName);
+    }
+
     @Override
     public double getCurrentSize() {
-        return projects
-            .values()
-            .stream()
-            .mapToDouble(project -> project.getCurrentSize())
-            .sum();
+        return projects.getCurrentSize();
     }
 
     @Override
     public double getInCapacitySize() {
-        return projects
-            .values()
-            .stream()
-            .mapToDouble(project -> project.getInCapacitySize())
-            .sum();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return projects.isEmpty();
-    }
-
-    @Override
-    public int getNumberOfFeatures() {
-        return projects
-            .values()
-            .stream()
-            .mapToInt(project -> project.getNumberOfFeatures())
-            .sum();
-    }
-
-    @Override
-    public boolean addFeature(Feature feature) {
-        return addFeature("", feature);
+        return projects.getInCapacitySize();
     }
 
     public boolean addFeature(String projectName, Feature feature) {
-        FeatureSet project;
-
-        if (projects.containsKey(projectName))
-            project = projects.get(projectName);
-        else
-            project = new FeatureSet();
-
-        boolean addSuccessful = project.addFeature(feature);
-        if (addSuccessful)
-            projects.put(projectName, project);
-
-        return addSuccessful;
+        return projects.addFeature(projectName, feature);
     }
 
-    @Override
-    public boolean removeFeature(Feature feature) {
-        // TODO Make a way to remove features from projects.
-        // If a project is empty, remove that project.
-        return true;
+    public boolean isEmpty() {
+        return projects.isEmpty();
     }
 }

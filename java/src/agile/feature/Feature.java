@@ -1,6 +1,6 @@
 package agile.feature;
 
-public abstract class Feature {
+public abstract class Feature implements AgileObject {
 
     private String key;
 
@@ -26,8 +26,4 @@ public abstract class Feature {
     public int hashCode() {
         return key.hashCode();
     }
-
-    public abstract double getCurrentSize();
-
-    public abstract double getInCapacitySize();
 }
