@@ -1,5 +1,8 @@
 package agile.feature;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ProgramFeature extends Feature implements FeatureCollection {
 
     private String summary;
@@ -47,12 +50,16 @@ public class ProgramFeature extends Feature implements FeatureCollection {
     public int getNumberOfFeatures() {
         return projects
             .values()
-            .stream();
-            .mapToInt(project -> project.getNumberOfFeatures()
+            .stream()
+            .mapToInt(project -> project.getNumberOfFeatures())
             .sum();
     }
 
     @Override
+    public boolean addFeature(Feature feature) {
+        return addFeature("", feature);
+    }
+
     public boolean addFeature(String projectName, Feature feature) {
         FeatureSet project;
 

@@ -8,7 +8,7 @@ public abstract class Feature {
         this.key = key;
     }
 
-    public String getKey();
+    public String getKey() {
         return key;
     }
 

@@ -20,7 +20,7 @@ implements FeatureCollection {
     public double getInCapacitySize() {
         if (features.isEmpty())
             return features.getInCapacitySize();
-        if (isInCapacity)
+        if (isInCapacity())
             return currentSize;
         return 0;
     }
