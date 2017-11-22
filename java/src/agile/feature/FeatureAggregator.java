@@ -30,16 +30,16 @@ public class FeatureAggregator implements AgileObject {
     }
 
     public boolean addFeature(String key, Feature feature) {
-        FeatureSet set;
+        boolean addSuccessful = false;
 
         if (featureMap.containsKey(key))
-            set = featureMap.get(key);
-        else
-            set = new FeatureSet();
-
-        boolean addSuccessful = set.addFeature(feature);
-        if (addSuccessful)
-            featureMap.put(key, set);
+            addSuccessful = featureMap.get(key).addFeature(feature);
+        else {
+            FeatureSet set = new FeatureSet();
+            addSuccessful = set.addFeature(feature);
+            if (addSuccessful)
+                featureMap.put(key, set);
+        }
 
         return addSuccessful;
     }
