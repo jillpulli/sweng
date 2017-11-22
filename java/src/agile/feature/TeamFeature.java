@@ -1,26 +1,22 @@
 package agile.feature;
 
-public class TeamFeature {
+public class TeamFeature extends CapacityFeature {
 
     private double currentSize;
-    private boolean inCapacity;
 
-
-    public TeamFeature(double currentSize, boolean inCapacity) {
+    public TeamFeature(String key, boolean inCapacity, double currentSize) {
+        super(key, inCapacity);
         this.currentSize = currentSize;
-        this.inCapacity = inCapacity;
     }
 
+    @Override
     public double getCurrentSize() {
         return currentSize;
     }
 
-    public boolean isInCapacity() {
-        return inCapacity;
-    }
-
+    @Override
     public double getInCapacitySize() {
-        if (inCapacity)
+        if (isInCapacity())
             return currentSize;
         return 0;
     }

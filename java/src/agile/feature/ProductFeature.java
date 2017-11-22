@@ -1,32 +1,47 @@
 package agile.feature;
 
-public class ProductFeature {
+public class ProductFeature extends CapacityFeature
+implements FeatureCollection {
 
     private double currentSize;
-    private boolean inCapacity;
-    private List<Feature> features;
+    private FeatureSet features = new FeatureSet();
 
-    public ProductFeature(double currentSize, boolean inCapacity) {
+    public ProductFeature(String key, boolean inCapacity, double currentSize) {
+        super(key, inCapacity);
         this.currentSize = currentSize;
-        this.inCapacity = inCapacity;
     }
 
+    @Override
     public double getCurrentSize() {
         return currentSize;
     }
 
-    public boolean isInCapacity() {
-        return inCapacity;
-    }
-
+    @Override
     public double getInCapacitySize() {
         if (features.isEmpty())
-            return super.getInCapacitySize();
-        else {
-            double capSize = 0;
-            for (Feature feat : features)
-                capSize += feat.getInCapacitySize();
-            return capSize;
-        }
+            return features.getInCapacitySize();
+        if (isInCapacity)
+            return currentSize;
+        return 0;
+    }
+
+    @Override
+    public boolean addFeature(Feature feature) {
+        return features.addFeature(feature);
+    }
+
+    @Override
+    public int getNumberOfFeatures() {
+        return features.getNumberOfFeatures();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return features.isEmpty();
+    }
+
+    @Override
+    public boolean removeFeature(Feature feature) {
+        return features.removeFeature(feature);
     }
 }
