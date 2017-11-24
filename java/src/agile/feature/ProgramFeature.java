@@ -9,7 +9,7 @@ public class ProgramFeature extends Feature {
 
     private String summary;
     private int priorityScore;
-    private FeatureAggregator projects = new FeatureAggregator();
+    private FeatureAggregator<String> projects = new FeatureAggregator<>();
 
     /**
      * ProgramFeature Constructor.

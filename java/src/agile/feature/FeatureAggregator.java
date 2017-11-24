@@ -8,10 +8,12 @@ import java.util.Map;
  * between a key and a set of features. Every key maps to a set containing
  * 1 to n features. Every feature under a particular key is unique. Every key
  * under a FeatureAggregator instance is also unique.
+ *
+ * @param <T> the type of keys maintained by this FeatureAggregator
  */
-public class FeatureAggregator implements AgileObject {
+public class FeatureAggregator<T> implements AgileObject {
 
-    private Map<String, FeatureSet> featureMap = new HashMap<>();
+    private Map<T, FeatureSet> featureMap = new HashMap<>();
 
     /**
      * Returns an object representing the set of features mapped to the specified
@@ -21,7 +23,7 @@ public class FeatureAggregator implements AgileObject {
      * @param key the key whose associated agile object is to be returned
      * @return an object representing the features under the specified key
      */
-    public AgileObject get(String key) {
+    public AgileObject get(T key) {
         return featureMap.get(key);
     }
 
@@ -53,7 +55,7 @@ public class FeatureAggregator implements AgileObject {
      * @param feature the feature to be added to the given key's set
      * @return true if the given key's set does not already contain the given feature
      */
-    public boolean addFeature(String key, Feature feature) {
+    public boolean addFeature(T key, Feature feature) {
         boolean addSuccessful = false;
 
         if (featureMap.containsKey(key))
