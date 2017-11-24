@@ -1,18 +1,25 @@
 package agile.feature;
 
+/**
+ * The ProductFeature class represents a CapacityFeature that is capable of
+ * storing additional features. A ProductFeature's in-capacity size is determined
+ * by all of the features it contains.
+ */
 public class ProductFeature extends CapacityFeature {
 
-    private double currentSize;
     private FeatureSet features = new FeatureSet();
 
-    public ProductFeature(String key, boolean inCapacity, double currentSize) {
-        super(key, inCapacity);
-        this.currentSize = currentSize;
-    }
-
-    @Override
-    public double getCurrentSize() {
-        return currentSize;
+    /**
+     * ProductFeature Constructor.
+     * Constructs a ProductFeature with a feature key and current size. The
+     * ProductFeature may be in or out of capacity.
+     *
+     * @param key this ProductFeature's unique feature key
+     * @param currentSize the size of this ProductFeature
+     * @param inCapacity true if this ProductFeature's work is in capacity
+     */
+    public ProductFeature(String key, double currentSize, boolean inCapacity) {
+        super(key, currentSize, inCapacity);
     }
 
     @Override
@@ -20,14 +27,26 @@ public class ProductFeature extends CapacityFeature {
         if (features.isEmpty())
             return features.getInCapacitySize();
         if (isInCapacity())
-            return currentSize;
+            return getCurrentSize();
         return 0;
     }
 
+    /**
+     * Adds the specified feature to this ProductFeature if it is not already
+     * present.
+     *
+     * @param feature the feature to be added to this ProductFeature
+     * @return true if this instance did not already contain the specified feature
+     */
     public boolean addFeature(Feature feature) {
         return features.addFeature(feature);
     }
 
+    /**
+     * Returns true if this ProductFeature contains no features.
+     *
+     * @return true if this ProductFeature contains no features
+     */
     public boolean isEmpty() {
         return features.isEmpty();
     }
