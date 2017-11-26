@@ -32,7 +32,7 @@ public class FeatureAggregator<T> implements AgileObject {
         return featureMap
             .values()
             .parallelStream()
-            .mapToDouble(set -> set.getCurrentSize())
+            .mapToDouble(FeatureSet::getCurrentSize)
             .sum();
     }
 
@@ -41,7 +41,20 @@ public class FeatureAggregator<T> implements AgileObject {
         return featureMap
             .values()
             .parallelStream()
-            .mapToDouble(set -> set.getInCapacitySize())
+            .mapToDouble(FeatureSet::getInCapacitySize)
+            .sum();
+    }
+
+    /**
+     * Returns the total number of features in this FeatureAggregator.
+     *
+     * @return the total number of features in this FeatureAggregator
+     */
+    public int getNumberOfFeatures() {
+        return featureMap
+            .values()
+            .parallelStream()
+            .mapToInt(FeatureSet::getNumberOfFeatures)
             .sum();
     }
 
