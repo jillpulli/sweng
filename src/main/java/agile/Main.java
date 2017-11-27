@@ -2,14 +2,17 @@ package agile;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -34,7 +37,7 @@ public class Main {
     }
 
     public static List<CSVRecord> importRecords(File file) {
-        List<CSVRecord> records = new ArrayList<>();
+        List<CSVRecord> records = Collections.EMPTY_LIST;
 
         try (CSVParser parser = CSVFormat
                 .EXCEL
@@ -47,5 +50,17 @@ public class Main {
         }
 
         return records;
+    }
+
+    public static void exportRecords(File target, Iterable<?> records,
+            String... headers) {
+        try (CSVPrinter printer = new CSVPrinter(
+                new BufferedWriter(new FileWriter(target)),
+                CSVFormat.EXCEL.withHeader(headers))) {
+            printer.printRecords(records);
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
