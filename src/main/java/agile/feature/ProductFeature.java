@@ -1,11 +1,11 @@
 package agile.feature;
 
 /**
- * The ProductFeature class represents a CapacityFeature that is capable of
+ * The ProductFeature class represents a TeamFeature that is capable of
  * storing additional features. A ProductFeature's in-capacity size is determined
  * by all of the features it contains.
  */
-public class ProductFeature extends CapacityFeature {
+public class ProductFeature extends TeamFeature {
 
     private FeatureSet features = new FeatureSet();
 
@@ -23,12 +23,19 @@ public class ProductFeature extends CapacityFeature {
     }
 
     @Override
+    public double getCurrentSize() {
+        double curr = super.getCurrentSize();
+        if (curr < 0)
+            curr = features.getCurrentSize();
+        setCurrentSize(curr);
+        return curr;
+    }
+
+    @Override
     public double getInCapacitySize() {
-        if (features.isEmpty())
+        if (!features.isEmpty())
             return features.getInCapacitySize();
-        if (isInCapacity())
-            return getCurrentSize();
-        return 0;
+        return super.getInCapacitySize();
     }
 
     /**
@@ -39,6 +46,7 @@ public class ProductFeature extends CapacityFeature {
      * @return true if this instance did not already contain the specified feature
      */
     public boolean addFeature(Feature feature) {
+        setCurrentSize(Integer.MIN_VALUE);
         return features.addFeature(feature);
     }
 

@@ -16,7 +16,7 @@ public class FeatureSet implements AgileObject {
     public double getCurrentSize() {
         return features
             .parallelStream()
-            .mapToDouble(feature -> feature.getCurrentSize())
+            .mapToDouble(Feature::getCurrentSize)
             .sum();
     }
 
@@ -24,8 +24,17 @@ public class FeatureSet implements AgileObject {
     public double getInCapacitySize() {
         return features
             .parallelStream()
-            .mapToDouble(feature -> feature.getInCapacitySize())
+            .mapToDouble(Feature::getInCapacitySize)
             .sum();
+    }
+
+    /**
+     * Returns the total number of features in this FeatureSet.
+     *
+     * @return the total number of features in this FeatureSet
+     */
+    public int getNumberOfFeatures() {
+        return features.size();
     }
 
     /**

@@ -1,6 +1,5 @@
 bin/
-*.csv
+target/
 .drivers
 .source
 *.swp
-*.tsv

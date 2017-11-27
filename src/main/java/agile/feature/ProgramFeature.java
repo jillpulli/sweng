@@ -26,13 +26,14 @@ public class ProgramFeature extends Feature {
         this.priorityScore = priorityScore;
     }
 
-    /**
-     * Returns a summary of the work being done under this ProgramFeature.
-     *
-     * @return a summary of the work under this ProgramFeature
-     */
-    public String getSummary() {
-        return summary;
+    @Override
+    public double getCurrentSize() {
+        return projects.getCurrentSize();
+    }
+
+    @Override
+    public double getInCapacitySize() {
+        return projects.getInCapacitySize();
     }
 
     /**
@@ -58,14 +59,13 @@ public class ProgramFeature extends Feature {
         return projects.get(projectName);
     }
 
-    @Override
-    public double getCurrentSize() {
-        return projects.getCurrentSize();
-    }
-
-    @Override
-    public double getInCapacitySize() {
-        return projects.getInCapacitySize();
+    /**
+     * Returns a summary of the work being done under this ProgramFeature.
+     *
+     * @return a summary of the work under this ProgramFeature
+     */
+    public String getSummary() {
+        return summary;
     }
 
     /**

@@ -5,7 +5,10 @@ package agile.feature;
  * Every instance of this class is only responsible for itself. It holds no
  * additional features.
  */
-public class TeamFeature extends CapacityFeature {
+public class TeamFeature extends Feature {
+
+    private double currentSize;
+    private boolean inCapacity;
 
     /**
      * TeamFeature Constructor.
@@ -17,7 +20,21 @@ public class TeamFeature extends CapacityFeature {
      * @param inCapacity true if this TeamFeature's work is in capacity
      */
     public TeamFeature(String key, double currentSize, boolean inCapacity) {
-        super(key, currentSize, inCapacity);
+        super(key);
+        this.currentSize = currentSize;
+        this.inCapacity = inCapacity;
+    }
+
+    @Override
+    public double getCurrentSize() {
+        return currentSize;
+    }
+
+    /**
+     * Sets this TeamFeature's current size to the specified value.
+     */
+    protected void setCurrentSize(double currentSize) {
+        this.currentSize = currentSize;
     }
 
     @Override
@@ -25,5 +42,15 @@ public class TeamFeature extends CapacityFeature {
         if (isInCapacity())
             return getCurrentSize();
         return 0;
+    }
+
+    /**
+     * Returns true if the work under this TeamFeature is in capacity.
+     * Returns false otherwise.
+     *
+     * @return true if this TeamFeature is in capacity
+     */
+    public boolean isInCapacity() {
+        return inCapacity;
     }
 }
