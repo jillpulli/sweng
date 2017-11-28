@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @param <T> the type of keys maintained by this FeatureAggregator
  */
-public class FeatureAggregator<T> implements AgileObject {
+public class FeatureAggregator<T> extends AgileObject {
 
     private Map<T, FeatureSet> featureMap = new HashMap<>();
 
@@ -23,7 +23,7 @@ public class FeatureAggregator<T> implements AgileObject {
      * @param key the key whose associated agile object is to be returned
      * @return an object representing the features under the specified key
      */
-    public AgileObject get(T key) {
+    public FeatureSet get(T key) {
         return featureMap.get(key);
     }
 
@@ -90,5 +90,9 @@ public class FeatureAggregator<T> implements AgileObject {
      */
     public boolean isEmpty() {
         return featureMap.isEmpty();
+    }
+
+    public Set<T> keySet() {
+        return featureMap.keySet();
     }
 }

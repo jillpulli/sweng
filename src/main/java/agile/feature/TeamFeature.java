@@ -40,7 +40,7 @@ public class TeamFeature extends Feature {
     @Override
     public double getInCapacitySize() {
         if (isInCapacity())
-            return getCurrentSize();
+            return currentSize;
         return 0;
     }
 

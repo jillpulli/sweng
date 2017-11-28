@@ -46,7 +46,7 @@ public class ProductFeature extends TeamFeature {
      * @return true if this instance did not already contain the specified feature
      */
     public boolean addFeature(Feature feature) {
-        setCurrentSize(Integer.MIN_VALUE);
+        setCurrentSize(-1.0);
         return features.addFeature(feature);
     }
 

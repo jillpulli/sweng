@@ -59,6 +59,10 @@ public class ProgramFeature extends Feature {
         return projects.get(projectName);
     }
 
+    public Set<String> getProjectNames() {
+        return projects.keySet();
+    }
+
     /**
      * Returns a summary of the work being done under this ProgramFeature.
      *

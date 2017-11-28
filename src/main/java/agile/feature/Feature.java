@@ -5,7 +5,7 @@ package agile.feature;
  * A feature instance is identified by a unique feature key. Two features
  * with matching feature keys are considered to be the same feature.
  */
-public abstract class Feature implements AgileObject {
+public abstract class Feature extends AgileObject {
 
     private String key;
 

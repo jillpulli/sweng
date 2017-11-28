@@ -8,7 +8,7 @@ import java.util.Set;
  * FeatureSet instances contain no pair of features f1 and f2 such that
  * f1.equals(f2).
  */
-public class FeatureSet implements AgileObject {
+public class FeatureSet extends AgileObject {
 
     private Set<Feature> features = new HashSet<>();
 
