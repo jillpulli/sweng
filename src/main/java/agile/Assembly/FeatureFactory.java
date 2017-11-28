@@ -6,25 +6,17 @@ import agile.feature.ProductFeature;
 import agile.feature.TeamFeature;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class FeatureFactory
 {
-    FeatureAggregator ftAggregator = new FeatureAggregator();
-
-    /*
-     * This method returns the relationship tree of all features
-     */
-    public FeatureAggregator getFeatureTree()
-    {
-        return ftAggregator;
-    }
-
     /*
      * This will make program features and populate all of its children features in it
      * While adding it to FeatureAggregator
      */
-    public void generateFeatureTree(ArrayList<HashMap<String, String>> database)
-    {
+    public FeatureAggregator generateFeatureTree(ArrayList<HashMap<String, String>> database, HashSet<String> departmentSet) // Will be a parameter of keysetdeptmartments and when you see 1 you add department to it
+    { // Instead of being void you will return ftAggregator
+        FeatureAggregator featureTree = new FeatureAggregator();
         HashMap<String, String> currHM;
         ProgramFeature currProgFT = new ProgramFeature("PLACEHOLDER", "WILL NEVER USE BC 1st CSV ENTRY IS PROGRAM FT", 0);
         ProductFeature currProdFT = new ProductFeature("FILLERBUSTER", 0, false);
@@ -39,6 +31,7 @@ public class FeatureFactory
                 {
                     currProdFT = new ProductFeature(currHM.get("key"), Double.parseDouble(currHM.get("currentSize")), Boolean.valueOf(currHM.get("inCapacity")));
                     currProgFT.addFeature(currHM.get("Project"), currProdFT);
+                    departmentSet.add(currHM.get("Project")); // Populates the departmentSet
                 }
                 else
                 {
@@ -50,13 +43,15 @@ public class FeatureFactory
             {
                 if(!currCSLProgram.equals(" ")) // Makes sure nothing is added in the zeroth iteration since product feature has yet to be built
                 {
-                    ftAggregator.addFeature(currCSLProgram, currProgFT);
+                    featureTree.addFeature(currCSLProgram, currProgFT);
                 }
 
                 // Makes the new Program Feature
                 currProgFT = new ProgramFeature(currHM.get("key"), currHM.get("summary"), Integer.parseInt(currHM.get("priorityScore")));
             }
         }
+
+        return featureTree;
     }
 
 }
