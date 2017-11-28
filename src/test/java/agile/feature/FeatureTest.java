@@ -53,6 +53,24 @@ public class FeatureTest extends TestCase {
         assertEquals(220.0, prod.getCurrentSize());
         assertEquals(120.0, prod.getInCapacitySize());
     }
+    
+    public void testProgramFeature() {
+        ProgramFeature prog = new ProgramFeature("PROG-1", "SUMMARY REDACTED", 3000);
+
+        assertTrue(prog.isEmpty());
+        assertEquals("SUMMARY REDACTED", prog.getSummary());
+        assertEquals(3000, prog.getPriorityScore());
+        assertEquals(0.0, prog.getCurrentSize());
+        assertEquals(0.0, prog.getInCapacitySize());
+
+        prog.addFeature("DEPTA", prod2);
+        prog.addFeature("DEPTA", prod3);
+        prog.addFeature("DEPTB", prod4);
+
+        assertEquals(90.0, prog.getCurrentSize());
+        assertEquals(60.0, prog.getInCapacitySize());
+        assertFalse(prog.isEmpty());
+    }
 
     public void testFeatureAggregator() {
         FeatureAggregator agg = new FeatureAggregator();
