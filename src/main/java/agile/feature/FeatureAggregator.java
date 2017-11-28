@@ -2,6 +2,7 @@ package agile.feature;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The FeatureAggregator class represents a collection of one-to-many relationships

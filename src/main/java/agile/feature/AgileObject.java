@@ -25,7 +25,7 @@ public abstract class AgileObject {
      */
     String getTotalInCapacityWork() {
         double percentage = (getInCapacitySize() / getCurrentSize()) * 100;
-        String percentString = new Double(percentage).toString();
+        String percentString = Double.toString(percentage);
         return percentString.substring(0, percentString.indexOf('.')) + '%';
     }
 }
