@@ -9,6 +9,10 @@ public class FeatureTest extends TestCase {
     private final Feature teamOne = new TeamFeature("TEAM-1", 80.0, true);
     private final Feature teamTwo = new TeamFeature("TEAM-2", 100.0, false);
     private final Feature teamThree = new TeamFeature("TEAM-3", 40.0, true);
+    
+    private final Feature prod2 = new ProductFeature("PROD-2", 20.0, true);
+    private final Feature prod3 = new ProductFeature("PROD-3", 30.0, false);
+    private final Feature prod4 = new ProductFeature("PROD-4", 40.0, true);
 
     public FeatureTest(String testName) {
         super(testName);
