@@ -1,4 +1,4 @@
-package agile.Assembly;
+package agile.assembly;
 
 import agile.feature.FeatureAggregator;
 import agile.feature.ProgramFeature;

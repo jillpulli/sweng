@@ -1,5 +1,9 @@
 package agile.feature;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The ProgramFeature class represents a feature that contains other features
  * grouped by project. Different projects are represented by their names.
@@ -59,6 +63,10 @@ public class ProgramFeature extends Feature {
         return projects.get(projectName);
     }
 
+    public Set<String> getProjectNames() {
+        return projects.keySet();
+    }
+
     /**
      * Returns a summary of the work being done under this ProgramFeature.
      *
@@ -91,5 +99,20 @@ public class ProgramFeature extends Feature {
      */
     public boolean isEmpty() {
         return projects.isEmpty();
+    }
+
+    @Override
+    public Map<String, String> toEntry() {
+        Map<String, String> entry = new HashMap<>();
+
+        entry.put("Program Feature Key", getKey());
+        entry.put("Summary", summary);
+        entry.put("Priority Score", Integer.toString(priorityScore));
+        entry.put("Total", getTotalInCapacityWork());
+
+        for (String project : projects.keySet())
+            entry.put(project, projects.get(project).getTotalInCapacityWork());
+
+        return entry;
     }
 }
