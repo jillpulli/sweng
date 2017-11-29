@@ -60,7 +60,7 @@ public class FeatureMatrix {
         for(String csl: set)
         {
             HashMap<String, String> row = new HashMap<>();
-            Set<Feature> features = feature.get(csl).getfeatures();
+            Set<Feature> features = feature.get(csl).getFeatures();
             for(Feature feature: features)
             {
                 ProgramFeature progFeat = (ProgramFeature) feature; //cast Feature as ProgramFeature
