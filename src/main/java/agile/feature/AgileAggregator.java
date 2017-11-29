@@ -46,6 +46,10 @@ public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
             .sum();
     }
 
+    public int getNumberOfKeys() {
+        return map.size();
+    }
+
     /**
      * Returns the total number of features in this FeatureAggregator.
      *

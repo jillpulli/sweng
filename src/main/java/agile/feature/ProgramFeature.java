@@ -11,6 +11,9 @@ import java.util.Set;
  */
 public class ProgramFeature extends Feature {
 
+    public static final ProgramFeature EMPTY_PROGRAM_FEATURE =
+        new ProgramFeature("", "", 0);
+
     private String summary;
     private int priorityScore;
     private AgileAggregator<String, Feature> projects = new AgileAggregator<>();

@@ -10,6 +10,9 @@ import java.util.Map;
  */
 public class ProductFeature extends TeamFeature {
 
+    public static final ProductFeature EMPTY_PRODUCT_FEATURE =
+        new ProductFeature("", 0.0, false);
+
     private AgileSet<Feature> features = new AgileSet();
 
     /**
