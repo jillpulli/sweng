@@ -22,6 +22,7 @@ public class FeatureFactory
         ProductFeature currProdFT = null;
         TeamFeature currTeamFT = null;
         String currCSLProgram = " ";
+        String currDepartment = " ";
 
         for (int i = 0; i < database.size(); i++) // Gets the HashMap inside each index
         {
@@ -32,8 +33,16 @@ public class FeatureFactory
                 { // This means a program feature has been instaniated
                     if (currHM.get("Level").equals(1))
                     {
-                        createProdFT(currHM, currProdFT);
-                        currProgFT.addFeature(currHM.get("Project"), currProdFT);
+                        if(currProdFT == null) // TEST
+                        {
+                            createProdFT(currHM, currProdFT);
+                            currDepartment = currHM.get("Project");
+                        }
+                        {
+                            currProgFT.addFeature(currDepartment, currProdFT); // When there
+                            createProdFT(currHM, currProdFT);
+                            currDepartment = currHM.get("Project");
+                        }
 
                         // Populates the departmentSet
                         departmentSet.add(currHM.get("Project"));
@@ -41,7 +50,10 @@ public class FeatureFactory
                     else if (currHM.get("Level").equals(2))
                     {
                         createTeamFT(currHM, currTeamFT);
-                        currProdFT.addFeature(currTeamFT);
+                        if(currProdFT != null)
+                        {
+                            currProdFT.addFeature(currTeamFT);
+                        }
                     }
                     else
                     {
@@ -56,16 +68,28 @@ public class FeatureFactory
 
                     // Makes the new Program Feature
                     createProgFT(currHM, currProgFT);
+                    featureReset(currProgFT, currProdFT, currTeamFT);
                 }
             }
+            /*
+             * Else if CSLProgram Key is not contained in this row's hashmap
+             * It is not a row we can work with
+             */
         }
 
         return featureTree;
     }
 
+    private void featureReset( ProgramFeature prog, ProductFeature prod, TeamFeature team)
+    {
+        prog = null;
+        prod = null;
+        team = null;
+    }
+
     private void createProgFT(HashMap<String, String> hm, ProgramFeature progFT)
     {
-        if(hm.containsKey("key") && hm.containsKey("summary") && hm.containsKey("priorityscore"))
+        if(hm.containsKey("key") && hm.containsKey("summary") && hm.containsKey("priorityscore")) // Checks it at least these key value pairs exists
         {
             progFT = new ProgramFeature(hm.get("key"), hm.get("summary"), Integer.parseInt(hm.get("priorityScore")));
         }
