@@ -26,6 +26,8 @@ public class FeatureTest extends TestCase {
         assertEquals("TEAM-2", teamTwo.getKey());
         assertEquals(100.0, teamTwo.getCurrentSize());
         assertEquals(0.0, teamTwo.getInCapacitySize());
+
+        assertEquals("100%", teamOne.getTotalInCapacityWork());
     }
 
     public void testFeatureSet() {
@@ -42,6 +44,8 @@ public class FeatureTest extends TestCase {
         assertEquals(3, set.getNumberOfFeatures());
         assertFalse(set.addFeature(new ProductFeature("TEAM-1", 50.0, true)));
         assertEquals(3, set.getNumberOfFeatures());
+
+        assertEquals("54%", set.getTotalInCapacityWork());
     }
 
     public void testProductFeature() {
