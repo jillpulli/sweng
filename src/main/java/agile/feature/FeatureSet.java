@@ -20,6 +20,15 @@ public class FeatureSet extends AgileObject {
             .sum();
     }
 
+    /**
+     *
+     * @return features as a HashSet
+     */
+    public Set<Feature> getFeatures(){
+        return features;
+    }
+
+
     @Override
     public double getInCapacitySize() {
         return features
