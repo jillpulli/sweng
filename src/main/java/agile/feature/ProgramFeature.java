@@ -13,7 +13,7 @@ public class ProgramFeature extends Feature {
 
     private String summary;
     private int priorityScore;
-    private FeatureAggregator<String> projects = new FeatureAggregator<>();
+    private AgileAggregator<String, Feature> projects = new AgileAggregator<>();
 
     /**
      * ProgramFeature Constructor.
@@ -63,10 +63,6 @@ public class ProgramFeature extends Feature {
         return projects.get(projectName);
     }
 
-    public Set<String> getProjectNames() {
-        return projects.keySet();
-    }
-
     /**
      * Returns a summary of the work being done under this ProgramFeature.
      *
@@ -89,7 +85,7 @@ public class ProgramFeature extends Feature {
      * feature
      */
     public boolean addFeature(String projectName, Feature feature) {
-        return projects.addFeature(projectName, feature);
+        return projects.add(projectName, feature);
     }
 
     /**

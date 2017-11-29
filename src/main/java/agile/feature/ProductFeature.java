@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class ProductFeature extends TeamFeature {
 
-    private FeatureSet features = new FeatureSet();
+    private AgileSet<Feature> features = new AgileSet();
 
     /**
      * ProductFeature Constructor.
@@ -50,7 +50,7 @@ public class ProductFeature extends TeamFeature {
      */
     public boolean addFeature(Feature feature) {
         setCurrentSize(-1.0);
-        return features.addFeature(feature);
+        return features.add(feature);
     }
 
     /**
