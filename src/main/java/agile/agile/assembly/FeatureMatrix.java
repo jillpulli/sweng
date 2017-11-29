@@ -49,9 +49,9 @@ public class FeatureMatrix {
       @param feature
       @return totalMatrix
       */
-    public ArrayList<HashMap<String, String>> totalMatrix()
+    public ArrayList<Map<String, String>> totalMatrix()
     {
-
+        double curSize = 0;
         double overall = 0;
 
 
@@ -70,20 +70,21 @@ public class FeatureMatrix {
                 for(String deptName: dept)
                 {
                     FeatureSet featureSet = (FeatureSet)progFeat.getProject(deptName);
-                    double curSize = featureSet.getCurrentSize();
+                    curSize = featureSet.getCurrentSize();
                     row.put(deptName, Double.toString(curSize));                    //Add total size to each dept name
                     overall += curSize;
                 }
 
                 row.put("Overall", Double.toString(overall));
                 overall = 0;
+                curSize = 0;
             }
             row.put("CSL_Programs", csl);
             totalMatrix.add(row);
         }
 
 
-
+    return totalMatrix;
     }
 
 
