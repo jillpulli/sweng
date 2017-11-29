@@ -1,19 +1,10 @@
 package agile;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
+import agile.assembly.FeatureFactory;
+import agile.feature.ProgramManager;
+import agile.util.RecordsIO;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Collections;
-import java.util.List;
 
 public class Main {
 
@@ -31,36 +22,13 @@ public class Main {
             return;
         }
 
-        List<CSVRecord> records = importRecords(file);
-        System.out.println(
-            String.format("There are %d records.", records.size()));
-    }
+        ProgramManager manager = FeatureFactory.assemblePrograms(
+            RecordsIO.importRecords(file));
 
-    public static List<CSVRecord> importRecords(File file) {
-        List<CSVRecord> records = Collections.EMPTY_LIST;
-
-        try (CSVParser parser = CSVFormat
-                .EXCEL
-                .withFirstRecordAsHeader()
-                .parse(new BufferedReader(new FileReader(file)))) {
-            return parser.getRecords();
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return records;
-    }
-
-    public static void exportRecords(File target, Iterable<?> records,
-            String... headers) {
-        try (CSVPrinter printer = new CSVPrinter(
-                new BufferedWriter(new FileWriter(target)),
-                CSVFormat.EXCEL.withHeader(headers))) {
-            printer.printRecords(records);
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        RecordsIO.exportRecords(
+            new File("/Users/genya/Desktop/TotalSize.csv"),
+            manager.getTotalSizeTable(),
+            "CSL Programs", "Overall"
+        );
     }
 }

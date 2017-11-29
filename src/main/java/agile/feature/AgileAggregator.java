@@ -12,9 +12,9 @@ import java.util.Set;
  *
  * @param <T> the type of keys maintained by this FeatureAggregator
  */
-public class FeatureAggregator<T> extends AgileObject {
+public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
 
-    private Map<T, FeatureSet> featureMap = new HashMap<>();
+    private Map<K, AgileSet<V>> map = new HashMap<>();
 
     /**
      * Returns an object representing the set of features mapped to the specified
@@ -24,26 +24,30 @@ public class FeatureAggregator<T> extends AgileObject {
      * @param key the key whose associated agile object is to be returned
      * @return an object representing the features under the specified key
      */
-    public FeatureSet get(T key) {
-        return featureMap.get(key);
+    public AgileSet<V> get(K key) {
+        return map.get(key);
     }
 
     @Override
     public double getCurrentSize() {
-        return featureMap
+        return map
             .values()
             .parallelStream()
-            .mapToDouble(FeatureSet::getCurrentSize)
+            .mapToDouble(AgileSet::getCurrentSize)
             .sum();
     }
 
     @Override
     public double getInCapacitySize() {
-        return featureMap
+        return map
             .values()
             .parallelStream()
-            .mapToDouble(FeatureSet::getInCapacitySize)
+            .mapToDouble(AgileSet::getInCapacitySize)
             .sum();
+    }
+
+    public int getNumberOfKeys() {
+        return map.size();
     }
 
     /**
@@ -51,11 +55,11 @@ public class FeatureAggregator<T> extends AgileObject {
      *
      * @return the total number of features in this FeatureAggregator
      */
-    public int getNumberOfFeatures() {
-        return featureMap
+    public int getNumberOfObjects() {
+        return map
             .values()
             .parallelStream()
-            .mapToInt(FeatureSet::getNumberOfFeatures)
+            .mapToInt(AgileSet::size)
             .sum();
     }
 
@@ -69,16 +73,16 @@ public class FeatureAggregator<T> extends AgileObject {
      * @param feature the feature to be added to the given key's set
      * @return true if the given key's set does not already contain the given feature
      */
-    public boolean addFeature(T key, Feature feature) {
+    public boolean add(K key, V item) {
         boolean addSuccessful = false;
 
-        if (featureMap.containsKey(key))
-            addSuccessful = featureMap.get(key).addFeature(feature);
+        if (map.containsKey(key))
+            addSuccessful = map.get(key).add(item);
         else {
-            FeatureSet set = new FeatureSet();
-            addSuccessful = set.addFeature(feature);
+            AgileSet set = new AgileSet();
+            addSuccessful = set.add(item);
             if (addSuccessful)
-                featureMap.put(key, set);
+                map.put(key, set);
         }
 
         return addSuccessful;
@@ -90,10 +94,10 @@ public class FeatureAggregator<T> extends AgileObject {
      * @return true if this FeatureAggregator contains no key-set mappings
      */
     public boolean isEmpty() {
-        return featureMap.isEmpty();
+        return map.isEmpty();
     }
 
-    public Set<T> keySet() {
-        return featureMap.keySet();
+    public Set<K> keySet() {
+        return map.keySet();
     }
 }
