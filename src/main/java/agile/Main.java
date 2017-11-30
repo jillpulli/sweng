@@ -17,50 +17,51 @@ import java.util.List;
 
 public class Main {
 
+    /**
+     * Imports a CSV file, generates the feature relationships, and
+     * exports all spreadsheets to the specified directory.
+     *
+     * Usage is specified by the following paths:
+     *     First argument (args[0]) : path to import file. Must be a file.
+     *     Second argument (args[1]) : path to export directory.
+     *         Must be a directory.
+     */
     public static void main(String[] args) {
-        // Assume args[0] is a path to the desired file.
-        if (args.length == 0) {
-            System.out.println("ERROR: No filename given.");
-            return;
+        if (!verifyFiles(args)) return;
+
+        ProgramManager manager = FeatureFactory.assemblePrograms(
+            RecordsIO.importRecords(args[0]));
+
+        RecordsIO.exportRecords(args[1] + "TotalSize.csv",
+            manager.getTotalSizeTable().sort("CSL Programs"));
+    }
+
+    public static boolean verifyFiles(String[] pathnames) {
+        if (pathnames.length == 0) {
+            System.out.println("ERROR: No filenames given.");
+            return false;
         }
 
-        File file = new File(args[0]);
-        if (!file.exists()) {
+        if (pathnames.length < 2) {
+            System.out.println("ERROR: Not enough files given");
+            return false;
+        }
+
+        File inFile = new File(pathnames[0]);
+        if (!inFile.isFile()) {
             System.out.println(String.format(
-                "ERROR: Cannot access '%s': No such file", args[0]));
-            return;
+                "ERROR: Cannot read from '%s': No such file", pathnames[0]));
+            return false;
         }
 
-        List<CSVRecord> records = importRecords(file);
-        System.out.println(
-            String.format("There are %d records.", records.size()));
-    }
-
-    public static List<CSVRecord> importRecords(File file) {
-        List<CSVRecord> records = Collections.EMPTY_LIST;
-
-        try (CSVParser parser = CSVFormat
-                .EXCEL
-                .withFirstRecordAsHeader()
-                .parse(new BufferedReader(new FileReader(file)))) {
-            return parser.getRecords();
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
+        File outFile = new File(pathnames[1]);
+        if (!outFile.isDirectory()) {
+            System.out.println(String.format(
+                "ERROR: Cannot export files to '%s': Not a directory",
+                pathnames[1]));
+            return false;
         }
 
-        return records;
-    }
-
-    public static void exportRecords(File target, Iterable<?> records,
-            String... headers) {
-        try (CSVPrinter printer = new CSVPrinter(
-                new BufferedWriter(new FileWriter(target)),
-                CSVFormat.EXCEL.withHeader(headers))) {
-            printer.printRecords(records);
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        return true;
     }
 }
