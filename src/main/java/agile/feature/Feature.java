@@ -1,7 +1,5 @@
 package agile.feature;
 
-import java.util.Map;
-
 /**
  * The Feature class represents a subset of work in an agile planning environment.
  * A feature instance is identified by a unique feature key. Two features
@@ -59,6 +57,4 @@ public abstract class Feature extends AgileObject {
     public int hashCode() {
         return key.hashCode();
     }
-
-    public abstract Map<String, String> toEntry();
 }
