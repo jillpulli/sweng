@@ -8,23 +8,23 @@ import java.util.Set;
  * FeatureSet instances contain no pair of features f1 and f2 such that
  * f1.equals(f2).
  */
-public class FeatureSet extends AgileObject {
+public class AgileSet<T extends AgileObject> extends AgileObject {
 
-    private Set<Feature> features = new HashSet<>();
+    private Set<T> items = new HashSet<>();
 
     @Override
     public double getCurrentSize() {
-        return features
+        return items
             .parallelStream()
-            .mapToDouble(Feature::getCurrentSize)
+            .mapToDouble(T::getCurrentSize)
             .sum();
     }
 
     @Override
     public double getInCapacitySize() {
-        return features
+        return items
             .parallelStream()
-            .mapToDouble(Feature::getInCapacitySize)
+            .mapToDouble(T::getInCapacitySize)
             .sum();
     }
 
@@ -33,8 +33,8 @@ public class FeatureSet extends AgileObject {
      *
      * @return the total number of features in this FeatureSet
      */
-    public int getNumberOfFeatures() {
-        return features.size();
+    public int size() {
+        return items.size();
     }
 
     /**
@@ -45,8 +45,8 @@ public class FeatureSet extends AgileObject {
      * @param feature the feature to be added to this set
      * @return true if this set did not already contain the specified feature
      */
-    public boolean addFeature(Feature feature) {
-        return features.add(feature);
+    public boolean add(T item) {
+        return items.add(item);
     }
 
     /**
@@ -55,6 +55,6 @@ public class FeatureSet extends AgileObject {
      * @return true if this set contains no features.
      */
     public boolean isEmpty() {
-        return features.isEmpty();
+        return items.isEmpty();
     }
 }

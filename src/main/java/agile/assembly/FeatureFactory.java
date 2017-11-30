@@ -1,57 +1,59 @@
 package agile.assembly;
 
-import agile.feature.FeatureAggregator;
-import agile.feature.ProgramFeature;
 import agile.feature.ProductFeature;
+import agile.feature.ProgramFeature;
+import agile.feature.ProgramManager;
 import agile.feature.TeamFeature;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.HashSet;
+import agile.util.DataRecord;
 
-public class FeatureFactory
-{
-    /*
-     * This will make program features and populate all of its children features in it
-     * While adding it to FeatureAggregator
-     */
-    public FeatureAggregator generateFeatureTree(ArrayList<HashMap<String, String>> database, HashSet<String> departmentSet) // Will be a parameter of keysetdeptmartments and when you see 1 you add department to it
-    { // Instead of being void you will return ftAggregator
-        FeatureAggregator featureTree = new FeatureAggregator();
-        HashMap<String, String> currHM;
-        ProgramFeature currProgFT = new ProgramFeature("PLACEHOLDER", "WILL NEVER USE BC 1st CSV ENTRY IS PROGRAM FT", 0);
-        ProductFeature currProdFT = new ProductFeature("FILLERBUSTER", 0, false);
-        String currCSLProgram = " ";
+import java.util.List;
 
-        for(int i = 0; i < database.size(); i++) // Gets the HashMap inside each index
-        {
-            currHM = database.get(i);
-            if(currHM.get("CSL Programs").equals(currCSLProgram))
-            { // This means a program feature has been instaniated
-                if (currHM.get("Level").equals(1))
-                {
-                    currProdFT = new ProductFeature(currHM.get("key"), Double.parseDouble(currHM.get("currentSize")), Boolean.valueOf(currHM.get("inCapacity")));
-                    currProgFT.addFeature(currHM.get("Project"), currProdFT);
-                    departmentSet.add(currHM.get("Project")); // Populates the departmentSet
-                }
-                else
-                {
-                    TeamFeature ft = new TeamFeature(currHM.get("key"), Double.parseDouble(currHM.get("currentSize")), Boolean.valueOf(currHM.get("inCapacity")));
-                    currProdFT.addFeature(ft);
-                }
+public class FeatureFactory {
+
+    public static ProgramManager assemblePrograms (List<DataRecord> records) {
+        ProgramManager programs = new ProgramManager();
+
+        ProgramFeature currentProgram = ProgramFeature.EMPTY_PROGRAM_FEATURE;
+        ProductFeature currentProduct = ProductFeature.EMPTY_PRODUCT_FEATURE;
+
+        for (DataRecord record : records)
+            switch (record.getLevel()) {
+                case 0:
+                    programs.add(
+                        record.getProgram(),
+                        (currentProgram = createProgramFeature(record)));
+                    break;
+                case 1:
+                    currentProgram.addFeature(
+                        record.getProject(),
+                        (currentProduct = createProductFeature(record)));
+                    break;
+                case 2:
+                    currentProduct.addFeature(createTeamFeature(record));
+                    break;
             }
-            else // If its a new CSL, add the previous Program Feature to the correct CSL
-            {
-                if(!currCSLProgram.equals(" ")) // Makes sure nothing is added in the zeroth iteration since product feature has yet to be built
-                {
-                    featureTree.addFeature(currCSLProgram, currProgFT);
-                }
 
-                // Makes the new Program Feature
-                currProgFT = new ProgramFeature(currHM.get("key"), currHM.get("summary"), Integer.parseInt(currHM.get("priorityScore")));
-            }
-        }
-
-        return featureTree;
+        return programs;
     }
 
+    public static ProductFeature createProductFeature(DataRecord record) {
+        return new ProductFeature(
+            record.getKey(),
+            record.getCurrentSize(),
+            record.getInCapacity());
+    }
+
+    public static ProgramFeature createProgramFeature(DataRecord record) {
+        return new ProgramFeature(
+            record.getKey(),
+            record.getSummary(),
+            record.getPriorityScore());
+    }
+
+    public static TeamFeature createTeamFeature(DataRecord record) {
+        return new TeamFeature(
+            record.getKey(),
+            record.getCurrentSize(),
+            record.getInCapacity());
+    }
 }

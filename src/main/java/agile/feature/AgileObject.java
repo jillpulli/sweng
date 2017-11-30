@@ -23,7 +23,7 @@ public abstract class AgileObject {
      * Returns the percentage of in capacity work under this AgileObject.
      * This value is the in capacity work divided by the current size.
      */
-    String getTotalInCapacityWork() {
+    public String getTotalInCapacityWork() {
         double percentage = (getInCapacitySize() / getCurrentSize()) * 100;
         String percentString = Double.toString(percentage);
         return percentString.substring(0, percentString.indexOf('.')) + '%';
