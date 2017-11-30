@@ -107,7 +107,7 @@ public class ProgramFeature extends Feature {
             .insertCell("Program Feature Key", getKey())
             .insertCell("Summary", summary)
             .insertCell("Priority Score", priorityScore)
-            .insertCell("Total", getTotalInCapacityWork())
+            .insertCell("Total", getTotalInCapacityWork());
 
         for (String project : projects.keySet())
             table.insertCell(project,
