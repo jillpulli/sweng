@@ -5,24 +5,25 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The FeatureAggregator class represents a collection of one-to-many relationships
- * between a key and a set of features. Every key maps to a set containing
- * 1 to n features. Every feature under a particular key is unique. Every key
- * under a FeatureAggregator instance is also unique.
+ * The AgileAggregator class represents a collection of one-to-many relationships
+ * between a key and a set of AgileObjects. Every key maps to a set containing
+ * 1 to n objects. Every object under a particular key is unique. Every key
+ * under a AgileAggregator instance is also unique.
  *
- * @param <T> the type of keys maintained by this FeatureAggregator
+ * @param <K> the type of keys maintained by this AgileAggregator
+ * @param <V> the type of AgileObjects being stored under each key
  */
 public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
 
     private Map<K, AgileSet<V>> map = new HashMap<>();
 
     /**
-     * Returns an object representing the set of features mapped to the specified
-     * key. A null value is returned if this FeatureAggregator contains no mapping
+     * Returns the set of AgileObjects being stored under the specified key.
+     * A null value is returned if this AgileAggregator contains no mapping
      * for the key.
      *
-     * @param key the key whose associated agile object is to be returned
-     * @return an object representing the features under the specified key
+     * @param key the key whose associated set of AgileObjects is to be returned
+     * @return the set of AgileObjects under the specified key
      */
     public AgileSet<V> get(K key) {
         return map.get(key);
@@ -46,14 +47,19 @@ public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
             .sum();
     }
 
+    /**
+     * Returns the total number of keys being stored under this AgileAggregator.
+     *
+     * @return the total number of keys being stored under this AgileAggregator
+     */
     public int getNumberOfKeys() {
         return map.size();
     }
 
     /**
-     * Returns the total number of features in this FeatureAggregator.
+     * Returns the total number of AgileObjects in this AgileAggregator.
      *
-     * @return the total number of features in this FeatureAggregator
+     * @return the total number of AgileObjects in this AgileAggregator
      */
     public int getNumberOfObjects() {
         return map
@@ -64,13 +70,13 @@ public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
     }
 
     /**
-     * Adds the specified feature to the set mapped to the specified key.
+     * Adds the specified AgileObject to the set mapped to the specified key.
      * If a key matching the argument does not exist, one will be created and
-     * added to this FeatureAggregator. The feature will only be added to an
-     * existing key's set if that feature is not already present in that set.
+     * added to this AgileAggregator. The object will only be added to an
+     * existing key's set if that object is not already present in that set.
      *
      * @param key the key representing the set to which to add the specified feature
-     * @param feature the feature to be added to the given key's set
+     * @param item the AgileObject to be added to the given key's set
      * @return true if the given key's set does not already contain the given feature
      */
     public boolean add(K key, V item) {
@@ -89,14 +95,19 @@ public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
     }
 
     /**
-     * Returns true if this FeatureAggregator contains no key-set mappings.
+     * Returns true if this AgileAggregator contains no key-set mappings.
      *
-     * @return true if this FeatureAggregator contains no key-set mappings
+     * @return true if this AgileAggregator contains no key-set mappings
      */
     public boolean isEmpty() {
         return map.isEmpty();
     }
 
+    /**
+     * Returns the set of keys being stored under this AgileAggregator.
+     *
+     * @return the set of keys being stored under this AgileAggregator
+     */
     public Set<K> keySet() {
         return map.keySet();
     }

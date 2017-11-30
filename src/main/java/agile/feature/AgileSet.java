@@ -1,14 +1,19 @@
 package agile.feature;
 
+import java.lang.Iterable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
- * A collection of features that contains no duplicates. More formally,
- * FeatureSet instances contain no pair of features f1 and f2 such that
- * f1.equals(f2).
+ * A collection of AgileObjects that contains no duplicates. More formally,
+ * AgileSet instances contain no pair of objects a1 and a2 such that
+ * a1.equals(a2).
  */
-public class AgileSet<T extends AgileObject> extends AgileObject {
+public class AgileSet<T extends AgileObject> extends AgileObject
+implements Iterable<T> {
 
     private Set<T> items = new HashSet<>();
 
@@ -29,32 +34,47 @@ public class AgileSet<T extends AgileObject> extends AgileObject {
     }
 
     /**
-     * Returns the total number of features in this FeatureSet.
-     *
-     * @return the total number of features in this FeatureSet
-     */
-    public int size() {
-        return items.size();
-    }
-
-    /**
-     * Adds the specified feature to this set if it is not already present.
-     * If the set already contains the feature, the call leaves the set unchanged
+     * Adds the specified AgileObject to this set if it is not already present.
+     * If the set already contains the object, the call leaves the set unchanged
      * and returns false.
      *
-     * @param feature the feature to be added to this set
-     * @return true if this set did not already contain the specified feature
+     * @param item the object to be added to this set
+     * @return true if this set did not already contain the specified object
      */
     public boolean add(T item) {
         return items.add(item);
     }
 
+    @Override
+    public void forEach(Consumer<? super T> action) {
+        items.forEach(action);
+    }
+
     /**
-     * Returns true if this set contains no features.
+     * Returns true if this set contains no objects.
      *
-     * @return true if this set contains no features.
+     * @return true if this set contains no objects.
      */
     public boolean isEmpty() {
         return items.isEmpty();
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return items.iterator();
+    }
+
+    /**
+     * Returns the total number of AgileObjects in this AgileSet.
+     *
+     * @return the total number of features in this AgileSet
+     */
+    public int size() {
+        return items.size();
+    }
+
+    @Override
+    public Spliterator<T> spliterator() {
+        return items.spliterator();
     }
 }

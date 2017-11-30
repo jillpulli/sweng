@@ -1,8 +1,5 @@
 package agile.feature;
 
-import java.util.Collections;
-import java.util.Map;
-
 /**
  * The ProductFeature class represents a TeamFeature that is capable of
  * storing additional features. A ProductFeature's in-capacity size is determined
@@ -13,7 +10,7 @@ public class ProductFeature extends TeamFeature {
     public static final ProductFeature EMPTY_PRODUCT_FEATURE =
         new ProductFeature("", 0.0, false);
 
-    private AgileSet<Feature> features = new AgileSet();
+    private AgileSet<Feature> features = new AgileSet<>();
 
     /**
      * ProductFeature Constructor.
@@ -63,10 +60,5 @@ public class ProductFeature extends TeamFeature {
      */
     public boolean isEmpty() {
         return features.isEmpty();
-    }
-
-    @Override
-    public Map<String, String> toEntry() {
-        return Collections.EMPTY_MAP;
     }
 }

@@ -36,6 +36,21 @@ public class DataTable {
         return this;
     }
 
+    public DataTable addRow(int index) {
+        rows.add(index, new HashMap<String, String>());
+        return this;
+    }
+
+    public DataTable addRow(Map<String, String> row) {
+        rows.add(row);
+        return this;
+    }
+
+    public DataTable addRow(int index, Map<String, String> row) {
+        rows.add(index, row);
+        return this;
+    }
+
     protected List<String[]> generateTable() {
         List<String[]> table = new ArrayList<>();
         int numColumns = headers.length;

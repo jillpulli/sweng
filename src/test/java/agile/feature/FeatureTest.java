@@ -32,7 +32,7 @@ public class FeatureTest extends TestCase {
     }
 
     public void testAgileSet() {
-        AgileSet set = new AgileSet();
+        AgileSet<Feature> set = new AgileSet<>();
         assertTrue(set.isEmpty());
 
         assertTrue(set.add(teamOne));
@@ -47,6 +47,11 @@ public class FeatureTest extends TestCase {
         assertEquals(3, set.size());
 
         assertEquals("54%", set.getTotalInCapacityWork());
+
+        double sum = 0;
+        for (Feature feat : set)
+            sum += feat.getCurrentSize();
+        assertEquals(220.0, sum);
     }
 
     public void testProductFeature() {

@@ -1,8 +1,5 @@
 package agile.feature;
 
-import java.util.Collections;
-import java.util.Map;
-
 /**
  * The TeamFeature class represents the final layer of decomposition of features.
  * Every instance of this class is only responsible for itself. It holds no
@@ -55,10 +52,5 @@ public class TeamFeature extends Feature {
      */
     public boolean isInCapacity() {
         return inCapacity;
-    }
-
-    @Override
-    public Map<String, String> toEntry() {
-        return Collections.EMPTY_MAP;
     }
 }

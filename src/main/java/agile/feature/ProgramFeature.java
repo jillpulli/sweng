@@ -1,5 +1,7 @@
 package agile.feature;
 
+import agile.util.DataTable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -100,18 +102,17 @@ public class ProgramFeature extends Feature {
         return projects.isEmpty();
     }
 
-    @Override
-    public Map<String, String> toEntry() {
-        Map<String, String> entry = new HashMap<>();
-
-        entry.put("Program Feature Key", getKey());
-        entry.put("Summary", summary);
-        entry.put("Priority Score", Integer.toString(priorityScore));
-        entry.put("Total", getTotalInCapacityWork());
+    public DataTable addFeaturePercentEntry(DataTable table) {
+        table
+            .insertCell("Program Feature Key", getKey())
+            .insertCell("Summary", summary)
+            .insertCell("Priority Score", priorityScore)
+            .insertCell("Total", getTotalInCapacityWork())
 
         for (String project : projects.keySet())
-            entry.put(project, projects.get(project).getTotalInCapacityWork());
+            table.insertCell(project,
+                projects.get(project).getTotalInCapacityWork());
 
-        return entry;
+        return table;
     }
 }
