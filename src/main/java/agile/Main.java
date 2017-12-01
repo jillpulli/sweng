@@ -25,6 +25,8 @@ public class Main {
 
         RecordsIO.exportRecords(args[1] + "TotalSize.csv",
             manager.getTotalSizeTable().sort("CSL Programs"));
+
+        System.out.println("Done!");
     }
 
     public static boolean verifyFiles(String[] pathnames) {

@@ -24,8 +24,10 @@ public class FeatureFactory {
                         (currentProgram = createProgramFeature(record)));
                     break;
                 case 1:
+                    String project = record.getProject();
+                    programs.addProject(project);
                     currentProgram.addFeature(
-                        record.getProject(),
+                        project,
                         (currentProduct = createProductFeature(record)));
                     break;
                 case 2:

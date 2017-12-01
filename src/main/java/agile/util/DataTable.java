@@ -1,5 +1,6 @@
 package agile.util;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -8,19 +9,19 @@ import java.util.Map;
 
 public class DataTable {
 
-    private String[] headers;
+    private List<String> headers;
     private List<Map<String, String>> rows = new ArrayList<>();
 
     public DataTable(String... headers) {
-        this.headers = headers;
+        this.headers = new ArrayList<String>(Arrays.asList(headers));
     }
 
-    public String[] getHeaders() {
+    public List<String> getHeaders() {
         return headers;
     }
 
     public int getNumberOfColumns() {
-        return headers.length;
+        return headers.size();
     }
 
     public int getNumberOfRows() {
@@ -31,13 +32,14 @@ public class DataTable {
         return rows.get(row);
     }
 
-    public DataTable addRow() {
-        rows.add(new HashMap<String, String>());
+    public DataTable addHeaders(String... headers) {
+        for (int i = 0, len = headers.length; i < len; i++)
+            this.headers.add(headers[i]);
         return this;
     }
 
-    public DataTable addRow(int index) {
-        rows.add(index, new HashMap<String, String>());
+    public DataTable addRow() {
+        rows.add(new HashMap<String, String>());
         return this;
     }
 
@@ -53,11 +55,11 @@ public class DataTable {
 
     protected List<String[]> generateTable() {
         List<String[]> table = new ArrayList<>();
-        int numColumns = headers.length;
+        int numColumns = headers.size();
         for (Map<String, String> row : rows) {
             String[] rowArray = new String[numColumns];
             for (int i = 0; i < numColumns; i++)
-                rowArray[i] = row.getOrDefault(headers[i], "N/A");
+                rowArray[i] = row.getOrDefault(headers.get(i), "N/A");
             table.add(rowArray);
         }
         return table;
