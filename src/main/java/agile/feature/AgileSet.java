@@ -34,6 +34,14 @@ implements Iterable<T> {
             .sum();
     }
 
+    @Override
+    public int getNumberOfFeatures() {
+        return items
+            .parallelStream()
+            .mapToInt(AgileObject::getNumberOfFeatures)
+            .sum();
+    }
+
     /**
      * Adds the specified AgileObject to this set if it is not already present.
      * If the set already contains the object, the call leaves the set unchanged

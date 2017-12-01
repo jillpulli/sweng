@@ -1,16 +1,12 @@
-package agile.assembly;
+package agile.feature;
 
-import agile.feature.ProductFeature;
-import agile.feature.ProgramFeature;
-import agile.feature.ProgramManager;
-import agile.feature.TeamFeature;
 import agile.util.DataRecord;
 
 import java.util.List;
 
 public class FeatureFactory {
 
-    public static ProgramManager assemblePrograms (List<DataRecord> records) {
+    public static ProgramManager assemblePrograms(List<DataRecord> records) {
         ProgramManager programs = new ProgramManager();
 
         ProgramFeature currentProgram = ProgramFeature.EMPTY_PROGRAM_FEATURE;

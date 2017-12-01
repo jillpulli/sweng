@@ -23,8 +23,11 @@ public class RecordsIO {
                 .EXCEL
                 .withFirstRecordAsHeader()
                 .parse(new BufferedReader(new FileReader(pathname)))) {
-            for (CSVRecord record : parser)
-                records.add(new DataRecord(record.toMap()));
+            for (CSVRecord record : parser) {
+                DataRecord feat = new DataRecord(record.toMap());
+                if (!feat.getKey().isEmpty())
+                    records.add(feat);
+            }
         }
         catch (IOException ex) {
             ex.printStackTrace();

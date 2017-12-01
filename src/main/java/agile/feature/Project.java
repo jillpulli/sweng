@@ -22,6 +22,11 @@ public class Project extends AgileObject {
         return inCapacitySize;
     }
 
+    @Override
+    public int getNumberOfFeatures() {
+        return 0;
+    }
+
     public String getName() {
         return name;
     }

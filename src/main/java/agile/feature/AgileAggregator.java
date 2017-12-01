@@ -61,11 +61,12 @@ public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
      *
      * @return the total number of AgileObjects in this AgileAggregator
      */
-    public int getNumberOfObjects() {
+    @Override
+    public int getNumberOfFeatures() {
         return map
             .values()
             .parallelStream()
-            .mapToInt(AgileSet::size)
+            .mapToInt(AgileSet::getNumberOfFeatures)
             .sum();
     }
 

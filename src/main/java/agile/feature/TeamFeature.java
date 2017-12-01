@@ -30,18 +30,23 @@ public class TeamFeature extends Feature {
         return currentSize;
     }
 
-    /**
-     * Sets this TeamFeature's current size to the specified value.
-     */
-    protected void setCurrentSize(double currentSize) {
-        this.currentSize = currentSize;
-    }
-
     @Override
     public double getInCapacitySize() {
         if (isInCapacity())
             return currentSize;
         return 0;
+    }
+
+    @Override
+    public int getNumberOfFeatures() {
+        return 1;
+    }
+
+    /**
+     * Sets this TeamFeature's current size to the specified value.
+     */
+    protected void setCurrentSize(double currentSize) {
+        this.currentSize = currentSize;
     }
 
     /**

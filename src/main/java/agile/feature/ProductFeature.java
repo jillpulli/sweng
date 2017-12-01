@@ -41,6 +41,11 @@ public class ProductFeature extends TeamFeature {
         return super.getInCapacitySize();
     }
 
+    @Override
+    public int getNumberOfFeatures() {
+        return features.getNumberOfFeatures() + 1;
+    }
+
     /**
      * Adds the specified feature to this ProductFeature if it is not already
      * present.

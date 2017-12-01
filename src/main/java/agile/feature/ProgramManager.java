@@ -33,11 +33,11 @@ public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
             "Priority Score",
             "Total"
         ).addHeaders(getProjectArray());
-        for (String program : keySet()) {
-            AgileSet<ProgramFeature> set = get(program);
-            set.forEach(feature ->
+
+        for (String program : keySet())
+            get(program).forEach(feature ->
                 feature.addFeaturePercentEntry(table.addRow()));
-        }
+
         return table;
     }
 

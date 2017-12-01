@@ -1,6 +1,6 @@
 package agile;
 
-import agile.assembly.FeatureFactory;
+import agile.feature.FeatureFactory;
 import agile.feature.ProgramManager;
 import agile.util.RecordsIO;
 
@@ -22,6 +22,8 @@ public class Main {
 
         ProgramManager manager = FeatureFactory.assemblePrograms(
             RecordsIO.importRecords(args[0]));
+
+        System.out.println(manager.getNumberOfFeatures() + " features found.");
 
         RecordsIO.exportRecords(args[1] + "FeatPercentInMatrix.csv",
             manager

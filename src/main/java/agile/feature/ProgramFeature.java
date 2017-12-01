@@ -46,6 +46,11 @@ public class ProgramFeature extends Feature {
         return projects.getInCapacitySize();
     }
 
+    @Override
+    public int getNumberOfFeatures() {
+        return projects.getNumberOfFeatures() + 1;
+    }
+
     /**
      * Returns the priority of the work being done under this ProgramFeature.
      * The priority score is a ranking of the feature's priority score.
