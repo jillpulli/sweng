@@ -23,6 +23,12 @@ public class Main {
         ProgramManager manager = FeatureFactory.assemblePrograms(
             RecordsIO.importRecords(args[0]));
 
+        RecordsIO.exportRecords(args[1] + "FeatPercentInMatrix.csv",
+            manager
+                .getFeatPercentInMatrix()
+                .sortByInt("Priority Score")
+                .reverse());
+
         RecordsIO.exportRecords(args[1] + "TotalSize.csv",
             manager.getTotalSizeTable().sort("CSL Programs"));
 

@@ -25,6 +25,22 @@ public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
         return projectArray;
     }
 
+    public DataTable getFeatPercentInMatrix() {
+        DataTable table = new DataTable(
+            "Program Feature Key",
+            "Summary",
+            "CSL Programs",
+            "Priority Score",
+            "Total"
+        ).addHeaders(getProjectArray());
+        for (String program : keySet()) {
+            AgileSet<ProgramFeature> set = get(program);
+            set.forEach(feature ->
+                feature.addFeaturePercentEntry(table.addRow()));
+        }
+        return table;
+    }
+
     public DataTable getInOutPercentTable() {
         return makeProgramTable(agileObj -> agileObj.getTotalInCapacityWork());
     }

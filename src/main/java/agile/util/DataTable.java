@@ -2,6 +2,7 @@ package agile.util;
 
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +73,11 @@ public class DataTable {
 
     public DataTable insertCell(String column, Object value) {
         return insertCell(rows.size() - 1, column, value);
+    }
+
+    public DataTable reverse() {
+        Collections.reverse(rows);
+        return this;
     }
 
     public DataTable sort(String sortColumn) {
