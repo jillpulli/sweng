@@ -35,8 +35,10 @@ public class RecordsIO {
 
     public static void exportRecords(String target, DataTable table) {
         try (CSVPrinter printer = new CSVPrinter(
-                new BufferedWriter(new FileWriter(target)),
-                CSVFormat.EXCEL.withHeader(table.getHeaders()))) {
+                new BufferedWriter(
+                    new FileWriter(target)),
+                CSVFormat.EXCEL.withHeader(
+                    table.getHeaders().toArray(new String[0])))) {
             printer.printRecords(table.generateTable());
         }
         catch (IOException ex) {

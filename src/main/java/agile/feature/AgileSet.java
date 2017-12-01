@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * A collection of AgileObjects that contains no duplicates. More formally,
@@ -64,6 +65,10 @@ implements Iterable<T> {
         return items.iterator();
     }
 
+    public Stream<T> parallelStream() {
+        return items.parallelStream();
+    }
+
     /**
      * Returns the total number of AgileObjects in this AgileSet.
      *
@@ -76,5 +81,9 @@ implements Iterable<T> {
     @Override
     public Spliterator<T> spliterator() {
         return items.spliterator();
+    }
+
+    public Stream<T> stream() {
+        return items.stream();
     }
 }

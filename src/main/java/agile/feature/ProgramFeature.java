@@ -3,6 +3,7 @@ package agile.feature;
 import agile.util.DataTable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -114,5 +115,18 @@ public class ProgramFeature extends Feature {
                 projects.get(project).getTotalInCapacityWork());
 
         return table;
+    }
+
+    public Set<Project> getProjectSet() {
+        Set<Project> set = new HashSet<Project>();
+        for (String name : projects.keySet()) {
+            AgileSet<Feature> project = projects.get(name);
+           set.add(new Project(
+                name,
+                project.getCurrentSize(),
+                project.getInCapacitySize()
+            ));
+        }
+        return set;
     }
 }
