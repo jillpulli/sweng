@@ -26,6 +26,9 @@ public class Main {
         RecordsIO.exportRecords(args[1] + "TotalSize.csv",
             manager.getTotalSizeTable().sort("CSL Programs"));
 
+        RecordsIO.exportRecords(args[1] + "InOutPercent.csv",
+            manager.getInOutPercentTable().sort("CSL Programs"));
+
         System.out.println("Done!");
     }
 

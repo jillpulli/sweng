@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
@@ -18,33 +19,41 @@ public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
     private Map<String, Collection<Project>> projectsByProgram =
         new HashMap<>();
 
-    public Set<String> getProjects() {
-        return projects;
-    }
-
     public String[] getProjectArray() {
         String[] projectArray = projects.toArray(new String[0]);
         Arrays.sort(projectArray);
         return projectArray;
     }
 
+    public DataTable getInOutPercentTable() {
+        return makeProgramTable(agileObj -> agileObj.getTotalInCapacityWork());
+    }
+
     public DataTable getTotalSizeTable() {
+        return makeProgramTable(agileObj ->
+            Long.toString(Math.round(agileObj.getCurrentSize())));
+    }
+
+    public boolean addProject(String project) {
+        return projects.add(project);
+    }
+
+    private DataTable makeProgramTable(Function<AgileObject, String> function) {
         if (projectsByProgram.isEmpty()) buildProjectsByProgram();
+
         DataTable table = getProgramTableBasis().addHeaders(getProjectArray());
         for (String program : keySet()) {
             table
                 .addRow()
                 .insertCell("CSL Programs", program)
-                .insertCell("Overall", Math.round(get(program).getCurrentSize()));
-            Collection<Project> projects = projectsByProgram.get(program);
-            for (Project project : projects)
-                table.insertCell(project.getName(), Math.round(project.getCurrentSize()));
+                .insertCell("Overall", function.apply(get(program)));
+
+            Collection<Project> progProjects = projectsByProgram.get(program);
+            for (Project project : progProjects)
+                table.insertCell(project.getName(),
+                    function.apply(project));
         }
         return table;
-    }
-
-    public boolean addProject(String project) {
-        return projects.add(project);
     }
 
     private void buildProjectsByProgram() {
