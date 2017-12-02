@@ -19,7 +19,7 @@ public class TeamFeature extends Feature {
      * @param currentSize the size of this TeamFeature
      * @param inCapacity true if this TeamFeature's work is in capacity
      */
-    public TeamFeature(String key, double currentSize, boolean inCapacity) {
+    TeamFeature(String key, double currentSize, boolean inCapacity) {
         super(key);
         this.currentSize = currentSize;
         this.inCapacity = inCapacity;
@@ -32,7 +32,7 @@ public class TeamFeature extends Feature {
 
     @Override
     public double getInCapacitySize() {
-        if (isInCapacity())
+        if (inCapacity)
             return currentSize;
         return 0;
     }
@@ -45,17 +45,7 @@ public class TeamFeature extends Feature {
     /**
      * Sets this TeamFeature's current size to the specified value.
      */
-    protected void setCurrentSize(double currentSize) {
+    void setCurrentSize(double currentSize) {
         this.currentSize = currentSize;
-    }
-
-    /**
-     * Returns true if the work under this TeamFeature is in capacity.
-     * Returns false otherwise.
-     *
-     * @return true if this TeamFeature is in capacity
-     */
-    public boolean isInCapacity() {
-        return inCapacity;
     }
 }

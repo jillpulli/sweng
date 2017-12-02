@@ -21,7 +21,7 @@ public class ProductFeature extends TeamFeature {
      * @param currentSize the size of this ProductFeature
      * @param inCapacity true if this ProductFeature's work is in capacity
      */
-    public ProductFeature(String key, double currentSize, boolean inCapacity) {
+    ProductFeature(String key, double currentSize, boolean inCapacity) {
         super(key, currentSize, inCapacity);
     }
 
@@ -56,14 +56,5 @@ public class ProductFeature extends TeamFeature {
     public boolean addFeature(Feature feature) {
         setCurrentSize(-1.0);
         return features.add(feature);
-    }
-
-    /**
-     * Returns true if this ProductFeature contains no features.
-     *
-     * @return true if this ProductFeature contains no features
-     */
-    public boolean isEmpty() {
-        return features.isEmpty();
     }
 }

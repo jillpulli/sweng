@@ -34,21 +34,21 @@ public class FeatureFactory {
         return programs;
     }
 
-    public static ProductFeature createProductFeature(DataRecord record) {
+    private static ProductFeature createProductFeature(DataRecord record) {
         return new ProductFeature(
             record.getKey(),
             record.getCurrentSize(),
             record.getInCapacity());
     }
 
-    public static ProgramFeature createProgramFeature(DataRecord record) {
+    private static ProgramFeature createProgramFeature(DataRecord record) {
         return new ProgramFeature(
             record.getKey(),
             record.getSummary(),
             record.getPriorityScore());
     }
 
-    public static TeamFeature createTeamFeature(DataRecord record) {
+    private static TeamFeature createTeamFeature(DataRecord record) {
         return new TeamFeature(
             record.getKey(),
             record.getCurrentSize(),

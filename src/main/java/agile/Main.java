@@ -40,29 +40,29 @@ public class Main {
         System.out.println("Done!");
     }
 
-    public static boolean verifyFiles(String[] pathnames) {
-        if (pathnames.length == 0) {
-            System.out.println("ERROR: No filenames given.");
+    private static boolean verifyFiles(String... pathNames) {
+        if (pathNames.length == 0) {
+            System.out.println("ERROR: No file names given.");
             return false;
         }
 
-        if (pathnames.length < 2) {
+        if (pathNames.length < 2) {
             System.out.println("ERROR: Not enough files given");
             return false;
         }
 
-        File inFile = new File(pathnames[0]);
+        File inFile = new File(pathNames[0]);
         if (!inFile.isFile()) {
             System.out.println(String.format(
-                "ERROR: Cannot read from '%s': No such file", pathnames[0]));
+                "ERROR: Cannot read from '%s': No such file", pathNames[0]));
             return false;
         }
 
-        File outFile = new File(pathnames[1]);
+        File outFile = new File(pathNames[1]);
         if (!outFile.isDirectory()) {
             System.out.println(String.format(
                 "ERROR: Cannot export files to '%s': Not a directory",
-                pathnames[1]));
+                pathNames[1]));
             return false;
         }
 

@@ -2,9 +2,7 @@ package agile.feature;
 
 import agile.util.DataTable;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -30,7 +28,7 @@ public class ProgramFeature extends Feature {
      * @param summary a summary of the work under this ProgramFeature
      * @param priorityScore the priority of the work under this ProgramFeature
      */
-    public ProgramFeature(String key, String summary, int priorityScore) {
+    ProgramFeature(String key, String summary, int priorityScore) {
         super(key);
         this.summary = summary;
         this.priorityScore = priorityScore;
@@ -74,6 +72,19 @@ public class ProgramFeature extends Feature {
         return projects.get(projectName);
     }
 
+    public Set<Project> getProjectSet() {
+        Set<Project> set = new HashSet<>();
+        for (String name : projects.keySet()) {
+            AgileSet<Feature> project = projects.get(name);
+            set.add(new Project(
+                name,
+                project.getCurrentSize(),
+                project.getInCapacitySize()
+            ));
+        }
+        return set;
+    }
+
     /**
      * Returns a summary of the work being done under this ProgramFeature.
      *
@@ -99,15 +110,6 @@ public class ProgramFeature extends Feature {
         return projects.add(projectName, feature);
     }
 
-    /**
-     * Returns true if this ProgramFeature contains no projects.
-     *
-     * @return true if this ProgramFeature contains no projects.
-     */
-    public boolean isEmpty() {
-        return projects.isEmpty();
-    }
-
     public DataTable addFeaturePercentEntry(DataTable table) {
         table
             .insertCell("Program Feature Key", getKey())
@@ -120,18 +122,5 @@ public class ProgramFeature extends Feature {
                 projects.get(project).getTotalInCapacityWork());
 
         return table;
-    }
-
-    public Set<Project> getProjectSet() {
-        Set<Project> set = new HashSet<Project>();
-        for (String name : projects.keySet()) {
-            AgileSet<Feature> project = projects.get(name);
-           set.add(new Project(
-                name,
-                project.getCurrentSize(),
-                project.getInCapacitySize()
-            ));
-        }
-        return set;
     }
 }

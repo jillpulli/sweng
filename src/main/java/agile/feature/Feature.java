@@ -15,7 +15,7 @@ public abstract class Feature extends AgileObject {
      *
      * @param key this Feature's unique feature key
      */
-    public Feature(String key) {
+    Feature(String key) {
         this.key = key;
     }
 
@@ -24,7 +24,7 @@ public abstract class Feature extends AgileObject {
      *
      * @return this Feature's unique feature key
      */
-    public String getKey() {
+    String getKey() {
         return key;
     }
 

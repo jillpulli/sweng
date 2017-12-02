@@ -48,15 +48,6 @@ public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
     }
 
     /**
-     * Returns the total number of keys being stored under this AgileAggregator.
-     *
-     * @return the total number of keys being stored under this AgileAggregator
-     */
-    public int getNumberOfKeys() {
-        return map.size();
-    }
-
-    /**
      * Returns the total number of AgileObjects in this AgileAggregator.
      *
      * @return the total number of AgileObjects in this AgileAggregator
@@ -93,15 +84,6 @@ public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
         }
 
         return addSuccessful;
-    }
-
-    /**
-     * Returns true if this AgileAggregator contains no key-set mappings.
-     *
-     * @return true if this AgileAggregator contains no key-set mappings
-     */
-    public boolean isEmpty() {
-        return map.isEmpty();
     }
 
     /**
