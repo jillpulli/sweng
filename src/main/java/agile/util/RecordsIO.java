@@ -41,8 +41,8 @@ public class RecordsIO {
                 new BufferedWriter(
                     new FileWriter(target)),
                 CSVFormat.EXCEL.withHeader(
-                    table.getHeaders().toArray(new String[0])))) {
-            printer.printRecords(table.generateTable());
+                    table.getHeaders()))) {
+            printer.printRecords(table.getBody());
         }
         catch (IOException ex) {
             ex.printStackTrace();

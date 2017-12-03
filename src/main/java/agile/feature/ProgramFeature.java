@@ -1,6 +1,7 @@
 package agile.feature;
 
 import agile.util.DataTable;
+import agile.util.ExportTable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -110,12 +111,12 @@ public class ProgramFeature extends Feature {
         return projects.add(projectName, feature);
     }
 
-    public DataTable addFeaturePercentEntry(DataTable table) {
+    public DataTable addFeaturePercentEntries(DataTable table) {
         table
-            .insertCell("Program Feature Key", getKey())
-            .insertCell("Summary", summary)
-            .insertCell("Priority Score", priorityScore)
-            .insertCell("Total", getTotalInCapacityWork());
+            .insertCell(ExportTable.ProgramKey.toString(), getKey())
+            .insertCell(ExportTable.Summary.toString(), summary)
+            .insertCell(ExportTable.PriorityScore.toString(), priorityScore)
+            .insertCell(ExportTable.Total.toString(), getTotalInCapacityWork());
 
         for (String project : projects.keySet())
             table.insertCell(project,

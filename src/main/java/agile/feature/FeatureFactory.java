@@ -31,6 +31,7 @@ public class FeatureFactory {
                     break;
             }
 
+        programs.buildProjectsByProgram();
         return programs;
     }
 

@@ -1,6 +1,5 @@
 package agile.util;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,94 +9,77 @@ import java.util.Map;
 
 public class DataTable {
 
-    private List<String> headers;
-    private List<Map<String, String>> rows = new ArrayList<>();
+    private String emptyCell;
+    private Map<String, Integer> headers = new HashMap<>();
+    private List<String[]> rows = new ArrayList<>();
 
-    public DataTable(String... headers) {
-        this.headers = new ArrayList<String>(Arrays.asList(headers));
+    public DataTable(String emptyCell) {
+        this.emptyCell = emptyCell;
     }
 
-    public List<String> getHeaders() {
-        return headers;
+    public List<String[]> getBody() {
+        return rows;
     }
 
-    public int getNumberOfColumns() {
-        return headers.size();
-    }
-
-    public int getNumberOfRows() {
-        return rows.size();
-    }
-
-    public Map<String, String> getRow(int row) {
-        return rows.get(row);
+    public String[] getHeaders() {
+        String[] headerArray = new String[headers.size()];
+        for (String name : headers.keySet())
+            headerArray[headers.get(name)] = name;
+        return headerArray;
     }
 
     public DataTable addHeaders(String... headers) {
-        for (int i = 0, len = headers.length; i < len; i++)
-            this.headers.add(headers[i]);
+        if (!rows.isEmpty())
+            throw new TableException(
+                "Headers may only be added to an empty table.");
+
+        int headerIndex = this.headers.size();
+
+        for (String name : headers)
+            this.headers.put(name, headerIndex++);
+
         return this;
     }
 
     public DataTable addRow() {
-        rows.add(new HashMap<String, String>());
-        return this;
-    }
+        int numHeaders = headers.size();
+        String[] row = new String[numHeaders];
 
-    public DataTable addRow(Map<String, String> row) {
+        for (int i = 0; i < numHeaders; i++)
+            row[i] = emptyCell;
+
         rows.add(row);
         return this;
     }
 
-    public DataTable addRow(int index, Map<String, String> row) {
-        rows.add(index, row);
-        return this;
-    }
-
-    protected List<String[]> generateTable() {
-        List<String[]> table = new ArrayList<>();
-        int numColumns = headers.size();
-        for (Map<String, String> row : rows) {
-            String[] rowArray = new String[numColumns];
-            for (int i = 0; i < numColumns; i++)
-                rowArray[i] = row.getOrDefault(headers.get(i), "N/A");
-            table.add(rowArray);
-        }
-        return table;
-    }
-
-    public DataTable insertCell(int row, String column, Object value) {
-        rows.get(row).put(column, value.toString());
-        return this;
-    }
-
     public DataTable insertCell(String column, Object value) {
-        return insertCell(rows.size() - 1, column, value);
+        if (!headers.containsKey(column))
+            throw new TableException(String.format(
+                "Table does not contain column '%s'.", column));
+
+        rows.get(rows.size() - 1)[headers.get(column)] = value.toString();
+        return this;
     }
 
-    public DataTable reverse() {
+    public DataTable reverseRows() {
         Collections.reverse(rows);
         return this;
     }
 
-    public DataTable sort(String sortColumn) {
-        rows.sort((a, b) -> a.get(sortColumn).compareTo(b.get(sortColumn)));
+    public DataTable sortBy(String column) {
+        rows.sort(Comparator.comparing(row -> row[headers.get(column)]));
         return this;
     }
 
-    public DataTable sortByDouble(String sortColumn) {
-        rows.sort((a, b) ->
-            Double.compare(
-                Double.parseDouble(a.get(sortColumn)),
-                Double.parseDouble(b.get(sortColumn))));
-        return this;
-    }
-
-    public DataTable sortByInt(String sortColumn) {
-        rows.sort((a, b) ->
-            Integer.compare(
-                Integer.parseInt(a.get(sortColumn)),
-                Integer.parseInt(b.get(sortColumn))));
-        return this;
+    public DataTable sortByInt(String column) {
+        try {
+            rows.sort(Comparator.comparingInt(row ->
+                Integer.parseInt(row[headers.get(column)])));
+            return this;
+        }
+        catch (NumberFormatException ex) {
+            throw new TableException(String.format(
+                "Cannot parse Integer for sorting by column '%s'.", column));
+        }
     }
 }

@@ -1,6 +1,7 @@
 package agile.feature;
 
 import agile.util.DataTable;
+import agile.util.ExportTable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,23 +18,24 @@ public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
         new HashMap<>();
 
     public DataTable getFeatPercentInMatrix() {
-        DataTable table = new DataTable(
-            "Program Feature Key",
-            "Summary",
-            "CSL Programs",
-            "Priority Score",
-            "Total"
-        ).addHeaders(getProjectArray());
+        DataTable table =
+            ExportTable
+                .getFeaturePercentTableBasis()
+                .addHeaders(getProjectArray());
 
         for (String program : keySet())
             get(program).forEach(feature ->
-                feature.addFeaturePercentEntry(table.addRow()));
+                feature
+                    .addFeaturePercentEntries(table.addRow())
+                    .insertCell(ExportTable.Program.toString(), program));
 
-        return table;
+        return table
+            .sortByInt(ExportTable.PriorityScore.toString())
+            .reverseRows();
     }
 
     public DataTable getInOutPercentTable() {
-        return makeProgramTable(agileObj -> agileObj.getTotalInCapacityWork());
+        return makeProgramTable(AgileObject::getTotalInCapacityWork);
     }
 
     public DataTable getTotalSizeTable() {
@@ -45,17 +47,13 @@ public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
         return projects.add(project);
     }
 
-    private DataTable getProgramTableBasis() {
-        return new DataTable("CSL Programs", "Overall");
-    }
-
     private String[] getProjectArray() {
         String[] projectArray = projects.toArray(new String[0]);
         Arrays.sort(projectArray);
         return projectArray;
     }
 
-    private void buildProjectsByProgram() {
+    void buildProjectsByProgram() {
         for (String program : keySet()) {
             Map<String, Project> projectMap = new HashMap<>();
 
@@ -78,20 +76,24 @@ public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
     }
 
     private DataTable makeProgramTable(Function<AgileObject, String> function) {
-        if (projectsByProgram.isEmpty()) buildProjectsByProgram();
+        DataTable table =
+            ExportTable
+                .getProgramTableBasis()
+                .addHeaders(getProjectArray());
 
-        DataTable table = getProgramTableBasis().addHeaders(getProjectArray());
         for (String program : keySet()) {
             table
                 .addRow()
-                .insertCell("CSL Programs", program)
-                .insertCell("Overall", function.apply(get(program)));
+                .insertCell(ExportTable.Program.toString(), program)
+                .insertCell(ExportTable.Total.toString(),
+                    function.apply(get(program)));
 
             Collection<Project> progProjects = projectsByProgram.get(program);
             for (Project project : progProjects)
                 table.insertCell(project.getName(),
                     function.apply(project));
         }
-        return table;
+
+        return table.sortBy(ExportTable.Program.toString());
     }
 }

@@ -9,6 +9,13 @@ import java.io.File;
 public class Main {
 
     /**
+     * Names for exported files.
+     */
+    private static final String FEAT_PERCENT = "FeatPercentInMatrix.csv";
+    private static final String IN_OUT_PERCENT = "InOutPercent.csv";
+    private static final String TOTAL_SIZE = "TotalSize.csv";
+
+    /**
      * Imports a CSV file, generates the feature relationships, and
      * exports all spreadsheets to the specified directory.
      *
@@ -25,17 +32,14 @@ public class Main {
 
         System.out.println(manager.getNumberOfFeatures() + " features found.");
 
-        RecordsIO.exportRecords(args[1] + "FeatPercentInMatrix.csv",
-            manager
-                .getFeatPercentInMatrix()
-                .sortByInt("Priority Score")
-                .reverse());
+        RecordsIO.exportRecords(args[1] + FEAT_PERCENT,
+            manager.getFeatPercentInMatrix());
 
-        RecordsIO.exportRecords(args[1] + "TotalSize.csv",
-            manager.getTotalSizeTable().sort("CSL Programs"));
+        RecordsIO.exportRecords(args[1] + TOTAL_SIZE,
+            manager.getTotalSizeTable());
 
-        RecordsIO.exportRecords(args[1] + "InOutPercent.csv",
-            manager.getInOutPercentTable().sort("CSL Programs"));
+        RecordsIO.exportRecords(args[1] + IN_OUT_PERCENT,
+            manager.getInOutPercentTable());
 
         System.out.println("Done!");
     }
