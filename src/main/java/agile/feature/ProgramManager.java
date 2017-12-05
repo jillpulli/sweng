@@ -47,17 +47,12 @@ public class ProgramManager {
     }
 
     public boolean addFeature(String programName, ProgramFeature feature) {
-        boolean addSuccessful = true;
-
         if (programs.containsKey(programName))
-            addSuccessful = programs.get(programName).add(feature);
-        else {
-            Program program;
-            programs.put(programName, (program = new Program(programName)));
-            program.add(feature);
-        }
+            return programs.get(programName).add(feature);
 
-        return addSuccessful;
+        Program program = new Program(programName);
+        programs.put(programName, program);
+        return program.add(feature);
     }
 
     public boolean addProject(String project) {

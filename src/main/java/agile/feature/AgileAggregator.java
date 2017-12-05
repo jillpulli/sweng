@@ -13,7 +13,7 @@ import java.util.Set;
  * @param <K> the type of keys maintained by this AgileAggregator
  * @param <V> the type of AgileObjects being stored under each key
  */
-public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
+public class AgileAggregator<K, V extends AgileObject> extends AgileObject {
 
     private Map<K, AgileSet<V>> map = new HashMap<>();
 
@@ -72,18 +72,12 @@ public class AgileAggregator<K,V extends AgileObject> extends AgileObject {
      * @return true if the given key's set does not already contain the given feature
      */
     public boolean add(K key, V item) {
-        boolean addSuccessful = false;
-
         if (map.containsKey(key))
-            addSuccessful = map.get(key).add(item);
-        else {
-            AgileSet set = new AgileSet();
-            addSuccessful = set.add(item);
-            if (addSuccessful)
-                map.put(key, set);
-        }
+            return map.get(key).add(item);
 
-        return addSuccessful;
+        AgileSet<V> set = new AgileSet<>();
+        map.put(key, set);
+        return set.add(item);
     }
 
     /**
