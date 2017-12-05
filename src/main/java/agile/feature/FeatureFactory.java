@@ -15,7 +15,7 @@ public class FeatureFactory {
         for (DataRecord record : records)
             switch (record.getLevel()) {
                 case 0:
-                    programs.add(
+                    programs.addFeature(
                         record.getProgram(),
                         (currentProgram = createProgramFeature(record)));
                     break;
@@ -31,7 +31,6 @@ public class FeatureFactory {
                     break;
             }
 
-        programs.buildProjectsByProgram();
         return programs;
     }
 

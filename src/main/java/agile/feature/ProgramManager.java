@@ -4,18 +4,16 @@ import agile.util.DataTable;
 import agile.util.ExportTable;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
+public class ProgramManager {
 
+    private Map<String, Program> programs = new HashMap<>();
     private Set<String> projects = new HashSet<>();
-    private Map<String, Collection<Project>> projectsByProgram =
-        new HashMap<>();
 
     public DataTable getFeatPercentInMatrix() {
         DataTable table =
@@ -23,11 +21,8 @@ public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
                 .getFeaturePercentTableBasis()
                 .addHeaders(getProjectArray());
 
-        for (String program : keySet())
-            get(program).forEach(feature ->
-                feature
-                    .addFeaturePercentEntries(table.addRow())
-                    .insertCell(ExportTable.Program.toString(), program));
+        programs.values().forEach(program ->
+            program.addFeaturePercentTableRows(table));
 
         return table
             .sortByInt(ExportTable.PriorityScore.toString())
@@ -38,9 +33,31 @@ public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
         return makeProgramTable(AgileObject::getTotalInCapacityWork);
     }
 
+    public int getNumberOfFeatures() {
+        return programs
+            .values()
+            .parallelStream()
+            .mapToInt(AgileObject::getNumberOfFeatures)
+            .sum();
+    }
+
     public DataTable getTotalSizeTable() {
         return makeProgramTable(agileObj ->
             Long.toString(Math.round(agileObj.getCurrentSize())));
+    }
+
+    public boolean addFeature(String programName, ProgramFeature feature) {
+        boolean addSuccessful = true;
+
+        if (programs.containsKey(programName))
+            addSuccessful = programs.get(programName).add(feature);
+        else {
+            Program program;
+            programs.put(programName, (program = new Program(programName)));
+            program.add(feature);
+        }
+
+        return addSuccessful;
     }
 
     public boolean addProject(String project) {
@@ -53,46 +70,14 @@ public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
         return projectArray;
     }
 
-    void buildProjectsByProgram() {
-        for (String program : keySet()) {
-            Map<String, Project> projectMap = new HashMap<>();
-
-            get(program)
-                .stream()
-                .flatMap(feature -> feature.getProjectSet().stream())
-                .forEach(project -> {
-                    String name = project.getName();
-
-                    if (!projectMap.containsKey(name))
-                        projectMap.put(name, new Project(name));
-
-                    projectMap.get(name)
-                        .addToCurrentSize(project.getCurrentSize())
-                        .addToInCapacitySize(project.getInCapacitySize());
-                });
-
-            projectsByProgram.put(program, projectMap.values());
-        }
-    }
-
     private DataTable makeProgramTable(Function<AgileObject, String> function) {
         DataTable table =
             ExportTable
                 .getProgramTableBasis()
                 .addHeaders(getProjectArray());
 
-        for (String program : keySet()) {
-            table
-                .addRow()
-                .insertCell(ExportTable.Program.toString(), program)
-                .insertCell(ExportTable.Total.toString(),
-                    function.apply(get(program)));
-
-            Collection<Project> progProjects = projectsByProgram.get(program);
-            for (Project project : progProjects)
-                table.insertCell(project.getName(),
-                    function.apply(project));
-        }
+        for (Program program : programs.values())
+            program.addProgramTableRow(table.addRow(), function);
 
         return table.sortBy(ExportTable.Program.toString());
     }

@@ -22,7 +22,7 @@ implements Iterable<T> {
     public double getCurrentSize() {
         return items
             .parallelStream()
-            .mapToDouble(T::getCurrentSize)
+            .mapToDouble(AgileObject::getCurrentSize)
             .sum();
     }
 
@@ -30,7 +30,7 @@ implements Iterable<T> {
     public double getInCapacitySize() {
         return items
             .parallelStream()
-            .mapToDouble(T::getInCapacitySize)
+            .mapToDouble(AgileObject::getInCapacitySize)
             .sum();
     }
 
