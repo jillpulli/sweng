@@ -28,6 +28,9 @@ public class Main {
 
         List<FeatureRecord> records;
         try {
+            File inFile = new File(args[0]);
+            LOGGER.info("Reading feature data from " +
+                inFile.getAbsolutePath());
             records = RecordsIO.importRecords(args[0]);
         }
         catch (TableException ex) {
