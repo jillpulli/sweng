@@ -1,37 +1,59 @@
 package agile.feature;
 
 import agile.util.DataRecord;
+import agile.util.SimpleLogger;
 
 import java.util.List;
 
 public class FeatureFactory {
 
-    public static ProgramManager assemblePrograms(List<DataRecord> records) {
-        ProgramManager programs = new ProgramManager();
-
+    public static void assemblePrograms(ProgramManager manager,
+            List<DataRecord> records, SimpleLogger logger) {
         ProgramFeature currentProgram = ProgramFeature.EMPTY_PROGRAM_FEATURE;
         ProductFeature currentProduct = ProductFeature.EMPTY_PRODUCT_FEATURE;
+        int index = 0;
+        int numberOfRecords = records.size();
+        DataRecord current;
 
-        for (DataRecord record : records)
-            switch (record.getLevel()) {
+        while (index < numberOfRecords &&
+                (current = records.get(index)).getLevel() != 0) {
+            logSkip(current, logger, "No parent Program Feature");
+            index++;
+        }
+
+        while (index < numberOfRecords) {
+            current = records.get(index++);
+            boolean isUnique = false;
+
+            switch (current.getLevel()) {
                 case 0:
-                    programs.addFeature(
-                        record.getProgram(),
-                        (currentProgram = createProgramFeature(record)));
+                    isUnique = manager.addFeature(
+                        current.getProgram(),
+                        (currentProgram = createProgramFeature(current)));
                     break;
                 case 1:
-                    String project = record.getProject();
-                    programs.addProject(project);
-                    currentProgram.addFeature(
+                    String project = current.getProject();
+                    manager.addProject(project);
+                    isUnique = currentProgram.addFeature(
                         project,
-                        (currentProduct = createProductFeature(record)));
+                        (currentProduct = createProductFeature(current)));
                     break;
                 case 2:
-                    currentProduct.addFeature(createTeamFeature(record));
+                    isUnique =
+                        currentProduct.addFeature(createTeamFeature(current));
                     break;
+                default:
+                    isUnique = true;
+                    logSkip(current, logger, "Bad 'Level' value");
             }
 
-        return programs;
+            if (!isUnique)
+                logSkip(current, logger, "Duplicate");
+        }
+
+        logger.info(String.format(
+            "Created %d features from %d records.",
+            manager.getNumberOfFeatures(), numberOfRecords));
     }
 
     private static ProductFeature createProductFeature(DataRecord record) {
@@ -53,5 +75,11 @@ public class FeatureFactory {
             record.getKey(),
             record.getCurrentSize(),
             record.getInCapacity());
+    }
+
+    private static void logSkip(DataRecord record, SimpleLogger logger,
+            String reason) {
+        logger.warning(String.format(
+            "Skipping record %s: %s", record.getKey(), reason));
     }
 }
