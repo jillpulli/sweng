@@ -2,19 +2,16 @@ package agile;
 
 import agile.feature.FeatureFactory;
 import agile.feature.ProgramManager;
+import agile.util.FeatureRecord;
 import agile.util.SimpleLogger;
 import agile.util.RecordsIO;
+import agile.util.TableException;
 
 import java.io.File;
+import java.util.List;
 
 public class Main {
 
-    /**
-     * Names for exported files.
-     */
-    private static final String FEAT_PERCENT = "FeatPercentInMatrix.csv";
-    private static final String IN_OUT_PERCENT = "InOutPercent.csv";
-    private static final String TOTAL_SIZE = "TotalSize.csv";
     private static final SimpleLogger LOGGER = new SimpleLogger(System.out);
 
     /**
@@ -29,21 +26,25 @@ public class Main {
     public static void main(String[] args) {
         if (!verifyFiles(args)) return;
 
+        List<FeatureRecord> records;
+        try {
+            records = RecordsIO.importRecords(args[0]);
+        }
+        catch (TableException ex) {
+            LOGGER.error(ex.getMessage());
+            return;
+        }
+
         ProgramManager manager = new ProgramManager();
 
-        FeatureFactory.assemblePrograms(
-            manager, RecordsIO.importRecords(args[0]), LOGGER);
+        FeatureFactory.assemblePrograms(manager, records, LOGGER);
 
-        RecordsIO.exportRecords(args[1] + FEAT_PERCENT,
-            manager.getFeatPercentInMatrix());
-
-        RecordsIO.exportRecords(args[1] + TOTAL_SIZE,
-            manager.getTotalSizeTable());
-
-        RecordsIO.exportRecords(args[1] + IN_OUT_PERCENT,
-            manager.getInOutPercentTable());
-
-        LOGGER.info("Done!");
+        LOGGER.info("Exporting the following files to " + args[1] + ':');
+        for (ExportFile file : ExportFile.values()) {
+            String name = file.getName();
+            RecordsIO.exportRecords(args[1] + name, file.makeTable(manager));
+            LOGGER.log("\t" + name);
+        }
     }
 
     private static boolean verifyFiles(String... pathNames) {

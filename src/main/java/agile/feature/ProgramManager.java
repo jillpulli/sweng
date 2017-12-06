@@ -4,6 +4,7 @@ import agile.util.DataTable;
 import agile.util.ExportTable;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,16 +13,13 @@ import java.util.function.Function;
 
 public class ProgramManager {
 
-    private Map<String, Program> programs = new HashMap<>();
-    private Set<String> projects = new HashSet<>();
-
-    public DataTable getFeatPercentInMatrix() {
+    public static DataTable makeFeatPercentInMatrix(ProgramManager manager) {
         DataTable table =
             ExportTable
                 .getFeaturePercentTableBasis()
-                .addHeaders(getProjectArray());
+                .addHeaders(manager.getProjectArray());
 
-        programs.values().forEach(program ->
+        manager.getPrograms().forEach(program ->
             program.addFeaturePercentTableRows(table));
 
         return table
@@ -29,9 +27,17 @@ public class ProgramManager {
             .reverseRows();
     }
 
-    public DataTable getInOutPercentTable() {
-        return makeProgramTable(AgileObject::getTotalInCapacityWork);
+    public static DataTable makeInOutPercentTable(ProgramManager manager) {
+        return manager.makeProgramTable(AgileObject::getTotalInCapacityWork);
     }
+
+    public static DataTable makeTotalSizeTable(ProgramManager manager) {
+        return manager.makeProgramTable(agileObj ->
+            Long.toString(Math.round(agileObj.getCurrentSize())));
+    }
+
+    private Map<String, Program> programs = new HashMap<>();
+    private Set<String> projects = new HashSet<>();
 
     public int getNumberOfFeatures() {
         return programs
@@ -39,11 +45,6 @@ public class ProgramManager {
             .parallelStream()
             .mapToInt(AgileObject::getNumberOfFeatures)
             .sum();
-    }
-
-    public DataTable getTotalSizeTable() {
-        return makeProgramTable(agileObj ->
-            Long.toString(Math.round(agileObj.getCurrentSize())));
     }
 
     public boolean addFeature(String programName, ProgramFeature feature) {
@@ -57,6 +58,10 @@ public class ProgramManager {
 
     public boolean addProject(String project) {
         return projects.add(project);
+    }
+
+    private Collection<Program> getPrograms() {
+        return programs.values();
     }
 
     private String[] getProjectArray() {

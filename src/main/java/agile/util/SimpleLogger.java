@@ -18,7 +18,7 @@ public class SimpleLogger {
         log("INFO: " + message);
     }
 
-    private void log(String message) {
+    public void log(String message) {
         out.println(message);
     }
 

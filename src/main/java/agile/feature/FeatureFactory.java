@@ -1,6 +1,6 @@
 package agile.feature;
 
-import agile.util.DataRecord;
+import agile.util.FeatureRecord;
 import agile.util.SimpleLogger;
 
 import java.util.List;
@@ -8,12 +8,12 @@ import java.util.List;
 public class FeatureFactory {
 
     public static void assemblePrograms(ProgramManager manager,
-            List<DataRecord> records, SimpleLogger logger) {
+            List<FeatureRecord> records, SimpleLogger logger) {
         ProgramFeature currentProgram = ProgramFeature.EMPTY_PROGRAM_FEATURE;
         ProductFeature currentProduct = ProductFeature.EMPTY_PRODUCT_FEATURE;
         int index = 0;
         int numberOfRecords = records.size();
-        DataRecord current;
+        FeatureRecord current;
 
         while (index < numberOfRecords &&
                 (current = records.get(index)).getLevel() != 0) {
@@ -56,28 +56,28 @@ public class FeatureFactory {
             manager.getNumberOfFeatures(), numberOfRecords));
     }
 
-    private static ProductFeature createProductFeature(DataRecord record) {
+    private static ProductFeature createProductFeature(FeatureRecord record) {
         return new ProductFeature(
             record.getKey(),
             record.getCurrentSize(),
             record.getInCapacity());
     }
 
-    private static ProgramFeature createProgramFeature(DataRecord record) {
+    private static ProgramFeature createProgramFeature(FeatureRecord record) {
         return new ProgramFeature(
             record.getKey(),
             record.getSummary(),
             record.getPriorityScore());
     }
 
-    private static TeamFeature createTeamFeature(DataRecord record) {
+    private static TeamFeature createTeamFeature(FeatureRecord record) {
         return new TeamFeature(
             record.getKey(),
             record.getCurrentSize(),
             record.getInCapacity());
     }
 
-    private static void logSkip(DataRecord record, SimpleLogger logger,
+    private static void logSkip(FeatureRecord record, SimpleLogger logger,
             String reason) {
         logger.warning(String.format(
             "Skipping record %s: %s", record.getKey(), reason));
