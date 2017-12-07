@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.geometry.*;
 import javafx.scene.image.*;
-import javafx.geometry.*;
 
 /*
  * This is GUI FRONT END
