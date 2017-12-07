@@ -16,22 +16,36 @@ import java.util.stream.Stream;
 public class AgileSet<T extends AgileObject> extends AgileObject
 implements Iterable<T> {
 
+    private double currentSize;
+    private double inCapacitySize = 0.0;
     private Set<T> items = new HashSet<>();
+
+    public AgileSet() {
+        currentSize = 0.0;
+    }
+
+    public AgileSet(double initialCurrentSize) {
+        currentSize = initialCurrentSize;
+    }
 
     @Override
     public double getCurrentSize() {
-        return items
-            .parallelStream()
-            .mapToDouble(AgileObject::getCurrentSize)
-            .sum();
+        if (currentSize < 0.0)
+            currentSize = items
+                .parallelStream()
+                .mapToDouble(AgileObject::getCurrentSize)
+                .sum();
+        return currentSize;
     }
 
     @Override
     public double getInCapacitySize() {
-        return items
-            .parallelStream()
-            .mapToDouble(AgileObject::getInCapacitySize)
-            .sum();
+        if (inCapacitySize < 0.0)
+            inCapacitySize = items
+                .parallelStream()
+                .mapToDouble(AgileObject::getInCapacitySize)
+                .sum();
+        return inCapacitySize;
     }
 
     @Override
@@ -51,7 +65,12 @@ implements Iterable<T> {
      * @return true if this set did not already contain the specified object
      */
     public boolean add(T item) {
-        return items.add(item);
+        boolean addSuccessful = items.add(item);
+        if (addSuccessful) {
+            currentSize = -1.0;
+            inCapacitySize = -1.0;
+        }
+        return addSuccessful;
     }
 
     @Override

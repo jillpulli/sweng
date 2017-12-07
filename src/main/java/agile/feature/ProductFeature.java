@@ -5,12 +5,12 @@ package agile.feature;
  * storing additional features. A ProductFeature's in-capacity size is determined
  * by all of the features it contains.
  */
-public class ProductFeature extends TeamFeature {
+public class ProductFeature extends CapacityFeature {
 
     public static final ProductFeature EMPTY_PRODUCT_FEATURE =
-        new ProductFeature("", 0.0, false);
+        new ProductFeature("", false, 0.0);
 
-    private AgileSet<Feature> features = new AgileSet<>();
+    private AgileSet<Feature> features;
 
     /**
      * ProductFeature Constructor.
@@ -21,24 +21,21 @@ public class ProductFeature extends TeamFeature {
      * @param currentSize the size of this ProductFeature
      * @param inCapacity true if this ProductFeature's work is in capacity
      */
-    ProductFeature(String key, double currentSize, boolean inCapacity) {
-        super(key, currentSize, inCapacity);
+    ProductFeature(String key, boolean inCapacity, double currentSize) {
+        super(key, inCapacity);
+        features = new AgileSet<Feature>(currentSize);
     }
 
     @Override
     public double getCurrentSize() {
-        double curr = super.getCurrentSize();
-        if (curr < 0)
-            curr = features.getCurrentSize();
-        setCurrentSize(curr);
-        return curr;
+        return features.getCurrentSize();
     }
 
     @Override
     public double getInCapacitySize() {
-        if (!features.isEmpty())
-            return features.getInCapacitySize();
-        return super.getInCapacitySize();
+        if (features.isEmpty())
+            return super.getInCapacitySize();
+        return features.getInCapacitySize();
     }
 
     @Override
@@ -54,7 +51,6 @@ public class ProductFeature extends TeamFeature {
      * @return true if this instance did not already contain the specified feature
      */
     public boolean addFeature(Feature feature) {
-        setCurrentSize(-1.0);
         return features.add(feature);
     }
 }

@@ -1,18 +1,16 @@
 package agile.feature;
 
+import java.util.Set;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class FeatureTest extends TestCase {
 
-    private final Feature teamOne = new TeamFeature("TEAM-1", 80.0, true);
-    private final Feature teamTwo = new TeamFeature("TEAM-2", 100.0, false);
-    private final Feature teamThree = new TeamFeature("TEAM-3", 40.0, true);
-
-    private final Feature prod2 = new ProductFeature("PROD-2", 20.0, true);
-    private final Feature prod3 = new ProductFeature("PROD-3", 30.0, false);
-    private final Feature prod4 = new ProductFeature("PROD-4", 40.0, true);
+    private final Feature teamOne = new TeamFeature("TEAM-1", true, 80.0);
+    private final Feature teamTwo = new TeamFeature("TEAM-2", false, 100.0);
+    private final Feature teamThree = new TeamFeature("TEAM-3", true, 40.0);
 
     public FeatureTest(String testName) {
         super(testName);
@@ -27,13 +25,18 @@ public class FeatureTest extends TestCase {
         assertEquals(100.0, teamTwo.getCurrentSize());
         assertEquals(0.0, teamTwo.getInCapacitySize());
 
+        assertEquals(teamThree.getCurrentSize(), teamThree.getInCapacitySize());
+
         assertEquals("0%", teamTwo.getTotalInCapacityWork());
         assertEquals("100%", teamOne.getTotalInCapacityWork());
     }
 
     public void testAgileSet() {
-        AgileSet<Feature> set = new AgileSet<>();
+        AgileSet<Feature> set = new AgileSet<>(90.0);
+
         assertTrue(set.isEmpty());
+        assertEquals(90.0, set.getCurrentSize());
+        assertEquals(0.0, set.getInCapacitySize());
 
         assertTrue(set.add(teamOne));
         assertTrue(set.add(teamTwo));
@@ -43,10 +46,12 @@ public class FeatureTest extends TestCase {
         assertEquals(120.0, set.getInCapacitySize());
 
         assertEquals(3, set.size());
-        assertFalse(set.add(new ProductFeature("TEAM-1", 50.0, true)));
+        assertFalse(set.add(new ProductFeature("TEAM-1", true, 50.0)));
         assertEquals(3, set.size());
 
-        assertEquals("54%", set.getTotalInCapacityWork());
+        assertEquals(3, set.getNumberOfFeatures());
+
+        assertEquals("55%", set.getTotalInCapacityWork());
 
         double sum = 0;
         for (Feature feat : set)
@@ -55,56 +60,50 @@ public class FeatureTest extends TestCase {
     }
 
     public void testProductFeature() {
-        ProductFeature prod = new ProductFeature("PROD-1", 40.0, false);
+        ProductFeature prod = new ProductFeature("PROD-1", false, 40.0);
 
         assertEquals(40.0, prod.getCurrentSize());
         assertEquals(0.0, prod.getInCapacitySize());
+        assertEquals(1, prod.getNumberOfFeatures());
 
-        prod.addFeature(teamOne);
-        prod.addFeature(teamTwo);
-        prod.addFeature(teamThree);
+        assertTrue(prod.addFeature(teamOne));
+        assertTrue(prod.addFeature(teamTwo));
+        assertTrue(prod.addFeature(teamThree));
 
         assertEquals(220.0, prod.getCurrentSize());
         assertEquals(120.0, prod.getInCapacitySize());
+
+        assertEquals(4, prod.getNumberOfFeatures());
     }
 
     public void testProgramFeature() {
         ProgramFeature prog =
-            new ProgramFeature("PROG-1", "SUMMARY REDACTED", 3000);
+            new ProgramFeature("PROG-1", "SUMMARY REDACTED", 3000, 120.0);
 
-        assertTrue(prog.isEmpty());
         assertEquals("SUMMARY REDACTED", prog.getSummary());
         assertEquals(3000, prog.getPriorityScore());
-        assertEquals(0.0, prog.getCurrentSize());
+        assertEquals(120.0, prog.getCurrentSize());
         assertEquals(0.0, prog.getInCapacitySize());
+        assertEquals(1, prog.getNumberOfFeatures());
 
-        prog.addFeature("DEPTA", prod2);
-        prog.addFeature("DEPTA", prod3);
-        prog.addFeature("DEPTB", prod4);
+        assertTrue(prog.addFeature(
+            "DEPT-A", new ProductFeature("PROD-1", true, 20.0)));
+        assertTrue(prog.addFeature(
+            "DEPT-A", new ProductFeature("PROD-2", false, 30.0)));
+        assertTrue(prog.addFeature(
+            "DEPT-B", new ProductFeature("PROD-3", true, 40.0)));
 
         assertEquals(90.0, prog.getCurrentSize());
         assertEquals(60.0, prog.getInCapacitySize());
-        assertFalse(prog.isEmpty());
-    }
+        assertEquals(4, prog.getNumberOfFeatures());
 
-    public void testAgileAggregator() {
-        AgileAggregator agg = new AgileAggregator();
+        assertFalse(prog.addFeature(
+            "DEPT-A", new ProductFeature("PROD-1", false, 50.0)));
 
-        assertTrue(agg.add("DEP-1", teamOne));
-        assertTrue(agg.add("DEP-1", teamTwo));
-        assertTrue(agg.add("DEP-1", teamThree));
+        assertEquals(90.0, prog.getCurrentSize());
+        assertEquals(4, prog.getNumberOfFeatures());
 
-        assertEquals(3, agg.getNumberOfObjects());
-        assertFalse(agg.add("DEP-1", new TeamFeature("TEAM-1", 10.0, false)));
-        assertEquals(3, agg.getNumberOfObjects());
-
-        assertEquals(agg.getCurrentSize(), agg.get("DEP-1").getCurrentSize());
-
-        assertTrue(agg.add("DEP-2", new ProductFeature("PROD-1", 40.0, true)));
-
-        assertEquals(220.0, agg.get("DEP-1").getCurrentSize());
-        assertEquals(40.0, agg.get("DEP-2").getCurrentSize());
-        assertEquals(260.0, agg.getCurrentSize());
-        assertEquals(160.0, agg.getInCapacitySize());
+        Set<Project> projects = prog.getProjectSet();
+        assertEquals(2, projects.size());
     }
 }

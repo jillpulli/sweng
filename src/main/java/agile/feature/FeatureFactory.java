@@ -59,22 +59,23 @@ public class FeatureFactory {
     private static ProductFeature createProductFeature(FeatureRecord record) {
         return new ProductFeature(
             record.getKey(),
-            record.getCurrentSize(),
-            record.getInCapacity());
+            record.getInCapacity(),
+            record.getCurrentSize());
     }
 
     private static ProgramFeature createProgramFeature(FeatureRecord record) {
         return new ProgramFeature(
             record.getKey(),
             record.getSummary(),
-            record.getPriorityScore());
+            record.getPriorityScore(),
+            record.getCurrentSize());
     }
 
     private static TeamFeature createTeamFeature(FeatureRecord record) {
         return new TeamFeature(
             record.getKey(),
-            record.getCurrentSize(),
-            record.getInCapacity());
+            record.getInCapacity(),
+            record.getCurrentSize());
     }
 
     private static void logSkip(FeatureRecord record, SimpleLogger logger,

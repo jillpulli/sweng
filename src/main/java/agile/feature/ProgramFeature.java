@@ -3,7 +3,9 @@ package agile.feature;
 import agile.util.DataTable;
 import agile.util.ExportTable;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,11 +16,13 @@ import java.util.Set;
 public class ProgramFeature extends Feature {
 
     public static final ProgramFeature EMPTY_PROGRAM_FEATURE =
-        new ProgramFeature("", "", 0);
+        new ProgramFeature("", "", 0, 0.0);
 
+    private double currentSize;
+    private double inCapacitySize;
     private String summary;
     private int priorityScore;
-    private AgileAggregator<String, Feature> projects = new AgileAggregator<>();
+    private Map<String, AgileSet<Feature>> projects = new HashMap<>();
 
     /**
      * ProgramFeature Constructor.
@@ -29,25 +33,43 @@ public class ProgramFeature extends Feature {
      * @param summary a summary of the work under this ProgramFeature
      * @param priorityScore the priority of the work under this ProgramFeature
      */
-    ProgramFeature(String key, String summary, int priorityScore) {
+    ProgramFeature(String key, String summary, int priorityScore,
+            double currentSize) {
         super(key);
         this.summary = summary;
         this.priorityScore = priorityScore;
+        this.currentSize = currentSize;
     }
 
     @Override
     public double getCurrentSize() {
-        return projects.getCurrentSize();
+        if (currentSize < 0.0)
+            currentSize = projects
+                .values()
+                .parallelStream()
+                .mapToDouble(AgileSet::getCurrentSize)
+                .sum();
+        return currentSize;
     }
 
     @Override
     public double getInCapacitySize() {
-        return projects.getInCapacitySize();
+        if (inCapacitySize < 0.0)
+            inCapacitySize = projects
+                .values()
+                .parallelStream()
+                .mapToDouble(AgileSet::getInCapacitySize)
+                .sum();
+        return inCapacitySize;
     }
 
     @Override
     public int getNumberOfFeatures() {
-        return projects.getNumberOfFeatures() + 1;
+        return projects
+            .values()
+            .parallelStream()
+            .mapToInt(AgileSet::getNumberOfFeatures)
+            .sum() + 1;
     }
 
     /**
@@ -108,7 +130,22 @@ public class ProgramFeature extends Feature {
      * feature
      */
     public boolean addFeature(String projectName, Feature feature) {
-        return projects.add(projectName, feature);
+        boolean addSuccessful = false;
+
+        if (projects.containsKey(projectName))
+            addSuccessful = projects.get(projectName).add(feature);
+        else {
+            AgileSet<Feature> set = new AgileSet<>();
+            projects.put(projectName, set);
+            addSuccessful = set.add(feature);
+        }
+
+        if (addSuccessful) {
+            currentSize = -1.0;
+            inCapacitySize = -1.0;
+        }
+
+        return addSuccessful;
     }
 
     public DataTable addFeaturePercentEntries(DataTable table) {

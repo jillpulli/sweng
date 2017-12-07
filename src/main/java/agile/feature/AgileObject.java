@@ -1,7 +1,7 @@
 package agile.feature;
 
 /**
- * The AgileObject class represents any object in an agile planning environment.
+ * The AgileObject class represents any entity in an agile planning environment.
  */
 public abstract class AgileObject {
 
