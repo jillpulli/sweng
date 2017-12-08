@@ -10,21 +10,25 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RecordsIO {
 
-    public static List<DataRecord> importRecords(String pathname) {
-        List<DataRecord> records = new ArrayList<>();
+    public static List<FeatureRecord> importRecords(String pathname) {
+        List<FeatureRecord> records = new ArrayList<>();
 
         try (CSVParser parser = CSVFormat
                 .EXCEL
                 .withFirstRecordAsHeader()
                 .parse(new BufferedReader(new FileReader(pathname)))) {
-            for (CSVRecord record : parser)
-                records.add(new DataRecord(record.toMap()));
+            verifyHeaders(parser);
+            for (CSVRecord record : parser) {
+                FeatureRecord feat = new FeatureRecord(record.toMap());
+                if (!feat.getKey().isEmpty())
+                    records.add(feat);
+            }
         }
         catch (IOException ex) {
             ex.printStackTrace();
@@ -38,11 +42,19 @@ public class RecordsIO {
                 new BufferedWriter(
                     new FileWriter(target)),
                 CSVFormat.EXCEL.withHeader(
-                    table.getHeaders().toArray(new String[0])))) {
-            printer.printRecords(table.generateTable());
+                    table.getHeaders()))) {
+            printer.printRecords(table.getBody());
         }
         catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private static void verifyHeaders(CSVParser parser) {
+        Set<String> headers = parser.getHeaderMap().keySet();
+        for (ImportHeader it : ImportHeader.values())
+            if (!headers.contains(it.toString()))
+                throw new TableException(
+                    "Import file does not contain '" + it + "' column.");
     }
 }

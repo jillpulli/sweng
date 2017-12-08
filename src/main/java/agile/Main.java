@@ -1,69 +1,88 @@
 package agile;
 
-import agile.assembly.FeatureFactory;
+import agile.feature.FeatureFactory;
 import agile.feature.ProgramManager;
+import agile.util.FeatureRecord;
+import agile.util.SimpleLogger;
 import agile.util.RecordsIO;
+import agile.util.TableException;
 
 import java.io.File;
+import java.util.List;
 
 public class Main {
+
+    private static final SimpleLogger LOGGER = new SimpleLogger(System.out);
 
     /**
      * Imports a CSV file, generates the feature relationships, and
      * exports all spreadsheets to the specified directory.
      *
      * Usage is specified by the following paths:
-     *     First argument (args[0]) : path to import file. Must be a file.
-     *     Second argument (args[1]) : path to export directory.
-     *         Must be a directory.
+     * <ul>
+     * <li>First argument (<code>args[0]</code>) : path to import file.
+     *     Must be a file.</li>
+     * <li>Second argument (<code>args[1]</code>) : path to export directory.
+     *     Must be a directory.</li>
+     * </ul>
+     *
+     * @param args the import file and export director file paths
      */
     public static void main(String[] args) {
         if (!verifyFiles(args)) return;
 
-        ProgramManager manager = FeatureFactory.assemblePrograms(
-            RecordsIO.importRecords(args[0]));
+        List<FeatureRecord> records;
+        try {
+            File inFile = new File(args[0]);
+            LOGGER.info("Reading feature data from " +
+                inFile.getAbsolutePath());
+            records = RecordsIO.importRecords(args[0]);
+        }
+        catch (TableException ex) {
+            LOGGER.error(ex.getMessage());
+            return;
+        }
 
-        RecordsIO.exportRecords(args[1] + "FeatPercentInMatrix.csv",
-            manager
-                .getFeatPercentInMatrix()
-                .sortByInt("Priority Score")
-                .reverse());
+        ProgramManager manager = new ProgramManager();
 
-        RecordsIO.exportRecords(args[1] + "TotalSize.csv",
-            manager.getTotalSizeTable().sort("CSL Programs"));
+        FeatureFactory.assemblePrograms(manager, records, LOGGER);
 
-        RecordsIO.exportRecords(args[1] + "InOutPercent.csv",
-            manager.getInOutPercentTable().sort("CSL Programs"));
-
-        System.out.println("Done!");
+        LOGGER.info("Exporting the following files to " + args[1] + ':');
+        for (ExportFile file : ExportFile.values()) {
+            String name = file.getName();
+            RecordsIO.exportRecords(args[1] + name, file.makeTable(manager));
+            LOGGER.log("\t" + name);
+        }
     }
 
-    public static boolean verifyFiles(String[] pathnames) {
-        if (pathnames.length == 0) {
-            System.out.println("ERROR: No filenames given.");
+    private static boolean verifyFiles(String... pathNames) {
+        if (pathNames.length == 0) {
+            LOGGER.error("No file names given.");
             return false;
         }
 
-        if (pathnames.length < 2) {
-            System.out.println("ERROR: Not enough files given");
+        if (pathNames.length < 2) {
+            LOGGER.error("Not enough files given.");
             return false;
         }
 
-        File inFile = new File(pathnames[0]);
+        File inFile = new File(pathNames[0]);
         if (!inFile.isFile()) {
-            System.out.println(String.format(
-                "ERROR: Cannot read from '%s': No such file", pathnames[0]));
+            LOGGER.error(String.format(
+                "Cannot read from '%s': No such file", pathNames[0]));
             return false;
         }
 
-        File outFile = new File(pathnames[1]);
+        File outFile = new File(pathNames[1]);
         if (!outFile.isDirectory()) {
-            System.out.println(String.format(
-                "ERROR: Cannot export files to '%s': Not a directory",
-                pathnames[1]));
+            LOGGER.error(String.format(
+                "Cannot export files to '%s': Not a directory",
+                pathNames[1]));
             return false;
         }
 
         return true;
     }
+
+    private Main() { };
 }

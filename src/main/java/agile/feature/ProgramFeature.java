@@ -1,6 +1,7 @@
 package agile.feature;
 
 import agile.util.DataTable;
+import agile.util.ExportTable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,12 +15,18 @@ import java.util.Set;
  */
 public class ProgramFeature extends Feature {
 
+    /**
+     * An out-of-capacity ProgramFeature with an empty string as the feature
+     * key and zeor current size.
+     */
     public static final ProgramFeature EMPTY_PROGRAM_FEATURE =
-        new ProgramFeature("", "", 0);
+        new ProgramFeature("", "", 0, 0.0);
 
+    private double currentSize;
+    private double inCapacitySize;
     private String summary;
     private int priorityScore;
-    private AgileAggregator<String, Feature> projects = new AgileAggregator<>();
+    private Map<String, AgileSet<Feature>> projects = new HashMap<>();
 
     /**
      * ProgramFeature Constructor.
@@ -29,21 +36,45 @@ public class ProgramFeature extends Feature {
      * @param key this ProgramFeature's unique feature key
      * @param summary a summary of the work under this ProgramFeature
      * @param priorityScore the priority of the work under this ProgramFeature
+     * @param currentSize this ProgramFeature's initial current size
      */
-    public ProgramFeature(String key, String summary, int priorityScore) {
+    ProgramFeature(String key, String summary, int priorityScore,
+            double currentSize) {
         super(key);
         this.summary = summary;
         this.priorityScore = priorityScore;
+        this.currentSize = currentSize;
     }
 
     @Override
     public double getCurrentSize() {
-        return projects.getCurrentSize();
+        if (currentSize < 0.0)
+            currentSize = projects
+                .values()
+                .parallelStream()
+                .mapToDouble(AgileSet::getCurrentSize)
+                .sum();
+        return currentSize;
     }
 
     @Override
     public double getInCapacitySize() {
-        return projects.getInCapacitySize();
+        if (inCapacitySize < 0.0)
+            inCapacitySize = projects
+                .values()
+                .parallelStream()
+                .mapToDouble(AgileSet::getInCapacitySize)
+                .sum();
+        return inCapacitySize;
+    }
+
+    @Override
+    public int getNumberOfFeatures() {
+        return projects
+            .values()
+            .parallelStream()
+            .mapToInt(AgileSet::getNumberOfFeatures)
+            .sum() + 1;
     }
 
     /**
@@ -70,6 +101,29 @@ public class ProgramFeature extends Feature {
     }
 
     /**
+     * Returns a set of the Projects under this ProgramFeature.
+     * At the time of this method call, each Project will have a current size
+     * and in-capacity size matching the projects being represented by this
+     * ProgramFeature. Note that manipulating this set or the Projects inside
+     * has no effect on this ProgramFeature.
+     *
+     * @return a set of Project objects representing the projects under this
+     * ProgramFeature
+     */
+    public Set<Project> getProjectSet() {
+        Set<Project> set = new HashSet<>();
+        for (String name : projects.keySet()) {
+            AgileSet<Feature> project = projects.get(name);
+            set.add(new Project(
+                name,
+                project.getCurrentSize(),
+                project.getInCapacitySize()
+            ));
+        }
+        return set;
+    }
+
+    /**
      * Returns a summary of the work being done under this ProgramFeature.
      *
      * @return a summary of the work under this ProgramFeature
@@ -91,42 +145,44 @@ public class ProgramFeature extends Feature {
      * feature
      */
     public boolean addFeature(String projectName, Feature feature) {
-        return projects.add(projectName, feature);
+        boolean addSuccessful = false;
+
+        if (projects.containsKey(projectName))
+            addSuccessful = projects.get(projectName).add(feature);
+        else {
+            AgileSet<Feature> set = new AgileSet<>();
+            projects.put(projectName, set);
+            addSuccessful = set.add(feature);
+        }
+
+        if (addSuccessful) {
+            currentSize = -1.0;
+            inCapacitySize = -1.0;
+        }
+
+        return addSuccessful;
     }
 
     /**
-     * Returns true if this ProgramFeature contains no projects.
+     * Adds this ProgramFeature's feature key, summary, priority score, and
+     * percentage of total in-capacity work to the last row of the specified
+     * DataTable. This method call assumes the table has a row already inserted
+     * and has headers for the previously-mentioned fields.
      *
-     * @return true if this ProgramFeature contains no projects.
+     * @param table the table to which to add the information to
+     * @return the specified DataTable
      */
-    public boolean isEmpty() {
-        return projects.isEmpty();
-    }
-
-    public DataTable addFeaturePercentEntry(DataTable table) {
+    public DataTable addFeaturePercentEntries(DataTable table) {
         table
-            .insertCell("Program Feature Key", getKey())
-            .insertCell("Summary", summary)
-            .insertCell("Priority Score", priorityScore)
-            .insertCell("Total", getTotalInCapacityWork());
+            .insertCell(ExportTable.ProgramKey.toString(), getKey())
+            .insertCell(ExportTable.Summary.toString(), summary)
+            .insertCell(ExportTable.PriorityScore.toString(), priorityScore)
+            .insertCell(ExportTable.Total.toString(), getTotalInCapacityWork());
 
         for (String project : projects.keySet())
             table.insertCell(project,
                 projects.get(project).getTotalInCapacityWork());
 
         return table;
-    }
-
-    public Set<Project> getProjectSet() {
-        Set<Project> set = new HashSet<Project>();
-        for (String name : projects.keySet()) {
-            AgileSet<Feature> project = projects.get(name);
-           set.add(new Project(
-                name,
-                project.getCurrentSize(),
-                project.getInCapacitySize()
-            ));
-        }
-        return set;
     }
 }

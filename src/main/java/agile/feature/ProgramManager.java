@@ -1,98 +1,84 @@
 package agile.feature;
 
 import agile.util.DataTable;
+import agile.util.ExportTable;
 
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-public class ProgramManager extends AgileAggregator<String, ProgramFeature> {
+public class ProgramManager {
 
-    private Set<String> projects = new HashSet<String>();
-    private Map<String, Collection<Project>> projectsByProgram =
-        new HashMap<>();
+    public static DataTable makeFeatPercentInMatrix(ProgramManager manager) {
+        DataTable table =
+            ExportTable
+                .getFeaturePercentTableBasis()
+                .addHeaders(manager.getProjectArray());
 
-    public String[] getProjectArray() {
-        String[] projectArray = projects.toArray(new String[0]);
-        Arrays.sort(projectArray);
-        return projectArray;
+        manager.getPrograms().forEach(program ->
+            program.addFeaturePercentTableRows(table));
+
+        return table
+            .sortByInt(ExportTable.PriorityScore.toString())
+            .reverseRows();
     }
 
-    public DataTable getFeatPercentInMatrix() {
-        DataTable table = new DataTable(
-            "Program Feature Key",
-            "Summary",
-            "CSL Programs",
-            "Priority Score",
-            "Total"
-        ).addHeaders(getProjectArray());
-        for (String program : keySet()) {
-            AgileSet<ProgramFeature> set = get(program);
-            set.forEach(feature ->
-                feature.addFeaturePercentEntry(table.addRow()));
-        }
-        return table;
+    public static DataTable makeInOutPercentTable(ProgramManager manager) {
+        return manager.makeProgramTable(AgileObject::getTotalInCapacityWork);
     }
 
-    public DataTable getInOutPercentTable() {
-        return makeProgramTable(agileObj -> agileObj.getTotalInCapacityWork());
-    }
-
-    public DataTable getTotalSizeTable() {
-        return makeProgramTable(agileObj ->
+    public static DataTable makeTotalSizeTable(ProgramManager manager) {
+        return manager.makeProgramTable(agileObj ->
             Long.toString(Math.round(agileObj.getCurrentSize())));
+    }
+
+    private Map<String, Program> programs = new HashMap<>();
+    private Set<String> projects = new HashSet<>();
+
+    public int getNumberOfFeatures() {
+        return programs
+            .values()
+            .parallelStream()
+            .mapToInt(AgileObject::getNumberOfFeatures)
+            .sum();
+    }
+
+    public boolean addFeature(String programName, ProgramFeature feature) {
+        if (programs.containsKey(programName))
+            return programs.get(programName).add(feature);
+
+        Program program = new Program(programName);
+        programs.put(programName, program);
+        return program.add(feature);
     }
 
     public boolean addProject(String project) {
         return projects.add(project);
     }
 
+    private Collection<Program> getPrograms() {
+        return programs.values();
+    }
+
+    private String[] getProjectArray() {
+        String[] projectArray = projects.toArray(new String[0]);
+        Arrays.sort(projectArray);
+        return projectArray;
+    }
+
     private DataTable makeProgramTable(Function<AgileObject, String> function) {
-        if (projectsByProgram.isEmpty()) buildProjectsByProgram();
+        DataTable table =
+            ExportTable
+                .getProgramTableBasis()
+                .addHeaders(getProjectArray());
 
-        DataTable table = getProgramTableBasis().addHeaders(getProjectArray());
-        for (String program : keySet()) {
-            table
-                .addRow()
-                .insertCell("CSL Programs", program)
-                .insertCell("Overall", function.apply(get(program)));
+        for (Program program : programs.values())
+            program.addProgramTableRow(table.addRow(), function);
 
-            Collection<Project> progProjects = projectsByProgram.get(program);
-            for (Project project : progProjects)
-                table.insertCell(project.getName(),
-                    function.apply(project));
-        }
-        return table;
-    }
-
-    private void buildProjectsByProgram() {
-        for (String program : keySet()) {
-            Map<String, Project> projectMap = new HashMap<>();
-            List<Project> allProjects =
-                get(program)
-                    .stream()
-                    .flatMap(feature -> feature.getProjectSet().stream())
-                    .collect(Collectors.toList());
-            for (Project project : allProjects) {
-                String name = project.getName();
-                if (!projectMap.containsKey(name))
-                    projectMap.put(name, new Project(name, 0, 0));
-                Project progProject = projectMap.get(name);
-                progProject.addToCurrentSize(project.getCurrentSize());
-                progProject.addToInCapacitySize(project.getInCapacitySize());
-            }
-            projectsByProgram.put(program, projectMap.values());
-        }
-    }
-
-    private DataTable getProgramTableBasis() {
-        return new DataTable("CSL Programs", "Overall");
+        return table.sortBy(ExportTable.Program.toString());
     }
 }
