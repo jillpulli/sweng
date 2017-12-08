@@ -7,6 +7,10 @@ package agile.feature;
  */
 public class ProductFeature extends CapacityFeature {
 
+    /**
+     * An out-of-capacity ProductFeature with an empty string as the feature
+     * key and zero current size.
+     */
     public static final ProductFeature EMPTY_PRODUCT_FEATURE =
         new ProductFeature("", false, 0.0);
 

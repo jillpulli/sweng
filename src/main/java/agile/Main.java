@@ -19,9 +19,14 @@ public class Main {
      * exports all spreadsheets to the specified directory.
      *
      * Usage is specified by the following paths:
-     *     First argument (args[0]) : path to import file. Must be a file.
-     *     Second argument (args[1]) : path to export directory.
-     *         Must be a directory.
+     * <ul>
+     * <li>First argument (<code>args[0]</code>) : path to import file.
+     *     Must be a file.</li>
+     * <li>Second argument (<code>args[1]</code>) : path to export directory.
+     *     Must be a directory.</li>
+     * </ul>
+     *
+     * @param args the import file and export director file paths
      */
     public static void main(String[] args) {
         if (!verifyFiles(args)) return;
@@ -78,4 +83,6 @@ public class Main {
 
         return true;
     }
+
+    private Main() { };
 }

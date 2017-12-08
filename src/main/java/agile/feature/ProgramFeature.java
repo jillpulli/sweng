@@ -15,6 +15,10 @@ import java.util.Set;
  */
 public class ProgramFeature extends Feature {
 
+    /**
+     * An out-of-capacity ProgramFeature with an empty string as the feature
+     * key and zeor current size.
+     */
     public static final ProgramFeature EMPTY_PROGRAM_FEATURE =
         new ProgramFeature("", "", 0, 0.0);
 
@@ -32,6 +36,7 @@ public class ProgramFeature extends Feature {
      * @param key this ProgramFeature's unique feature key
      * @param summary a summary of the work under this ProgramFeature
      * @param priorityScore the priority of the work under this ProgramFeature
+     * @param currentSize this ProgramFeature's initial current size
      */
     ProgramFeature(String key, String summary, int priorityScore,
             double currentSize) {
@@ -95,6 +100,16 @@ public class ProgramFeature extends Feature {
         return projects.get(projectName);
     }
 
+    /**
+     * Returns a set of the Projects under this ProgramFeature.
+     * At the time of this method call, each Project will have a current size
+     * and in-capacity size matching the projects being represented by this
+     * ProgramFeature. Note that manipulating this set or the Projects inside
+     * has no effect on this ProgramFeature.
+     *
+     * @return a set of Project objects representing the projects under this
+     * ProgramFeature
+     */
     public Set<Project> getProjectSet() {
         Set<Project> set = new HashSet<>();
         for (String name : projects.keySet()) {
@@ -148,6 +163,15 @@ public class ProgramFeature extends Feature {
         return addSuccessful;
     }
 
+    /**
+     * Adds this ProgramFeature's feature key, summary, priority score, and
+     * percentage of total in-capacity work to the last row of the specified
+     * DataTable. This method call assumes the table has a row already inserted
+     * and has headers for the previously-mentioned fields.
+     *
+     * @param table the table to which to add the information to
+     * @return the specified DataTable
+     */
     public DataTable addFeaturePercentEntries(DataTable table) {
         table
             .insertCell(ExportTable.ProgramKey.toString(), getKey())
