@@ -20,9 +20,6 @@ public enum ExportFile {
     FeaturePercent
         ("FeatPercentInMatrix.csv", ProgramManager::makeFeatPercentInMatrix),
 
-    InCapacitySize
-        ("InCapacitySize.csv", ProgramManager::makeInCapacitySizeTable),
-
     /**
      * Represents an In-Out Percent table. The export file's name will be
      * "InOutPercent.csv".

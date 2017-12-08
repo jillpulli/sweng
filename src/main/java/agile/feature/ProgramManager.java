@@ -31,11 +31,6 @@ public class ProgramManager {
             .reverseRows();
     }
 
-    public static DataTable makeInCapacitySizeTable(ProgramManager manager) {
-        return manager.makeProgramTable(agileObj ->
-            Long.toString(Math.round(agileObj.getInCapacitySize())));
-    }
-
     public static DataTable makeInOutPercentTable(ProgramManager manager) {
         return manager.makeProgramTable(AgileObject::getTotalInCapacityWork);
     }
