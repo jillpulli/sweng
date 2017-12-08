@@ -51,7 +51,7 @@ public class ProgramFeature extends Feature {
         if (currentSize <= 0.0)
             currentSize = projects
                 .values()
-                .parallelStream()
+                .stream()
                 .mapToDouble(AgileSet::getCurrentSize)
                 .sum();
         return currentSize;
@@ -62,7 +62,7 @@ public class ProgramFeature extends Feature {
         if (inCapacitySize <= 0.0)
             inCapacitySize = projects
                 .values()
-                .parallelStream()
+                .stream()
                 .mapToDouble(AgileSet::getInCapacitySize)
                 .sum();
         return inCapacitySize;
@@ -72,7 +72,7 @@ public class ProgramFeature extends Feature {
     public int getNumberOfFeatures() {
         return projects
             .values()
-            .parallelStream()
+            .stream()
             .mapToInt(AgileSet::getNumberOfFeatures)
             .sum() + 1;
     }

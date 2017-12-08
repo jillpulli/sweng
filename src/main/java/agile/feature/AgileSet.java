@@ -32,7 +32,7 @@ implements Iterable<T> {
     public double getCurrentSize() {
         if (currentSize <= 0.0)
             currentSize = items
-                .parallelStream()
+                .stream()
                 .mapToDouble(AgileObject::getCurrentSize)
                 .sum();
         return currentSize;
@@ -42,7 +42,7 @@ implements Iterable<T> {
     public double getInCapacitySize() {
         if (inCapacitySize <= 0.0)
             inCapacitySize = items
-                .parallelStream()
+                .stream()
                 .mapToDouble(AgileObject::getInCapacitySize)
                 .sum();
         return inCapacitySize;
@@ -51,7 +51,7 @@ implements Iterable<T> {
     @Override
     public int getNumberOfFeatures() {
         return items
-            .parallelStream()
+            .stream()
             .mapToInt(AgileObject::getNumberOfFeatures)
             .sum();
     }
@@ -90,10 +90,6 @@ implements Iterable<T> {
     @Override
     public Iterator<T> iterator() {
         return items.iterator();
-    }
-
-    public Stream<T> parallelStream() {
-        return items.parallelStream();
     }
 
     /**

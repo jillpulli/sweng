@@ -48,7 +48,7 @@ public class ProgramManager {
     public int getNumberOfFeatures() {
         return programs
             .values()
-            .parallelStream()
+            .stream()
             .mapToInt(AgileObject::getNumberOfFeatures)
             .sum();
     }

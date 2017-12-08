@@ -16,7 +16,7 @@ public class FeatureFactory {
         FeatureRecord current;
 
         while (index < numberOfRecords &&
-                (current = records.get(index)).getLevel() != 0) {
+                !(current = records.get(index)).getLevel().equals("0")) {
             logSkip(current, logger, "No parent Program Feature");
             index++;
         }
@@ -26,17 +26,17 @@ public class FeatureFactory {
             boolean isUnique = false;
 
             switch (current.getLevel()) {
-                case 0:
+                case "0":
                     isUnique = manager.addFeature(
                         current.getProgram(),
                         (currentProgram = createProgramFeature(current)));
                     break;
-                case 1:
+                case "1":
                     isUnique = currentProgram.addFeature(
                         current.getProject(),
                         (currentProduct = createProductFeature(current)));
                     break;
-                case 2:
+                case "2":
                     isUnique =
                         currentProduct.addFeature(createTeamFeature(current));
                     break;

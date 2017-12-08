@@ -23,8 +23,8 @@ public class FeatureRecord {
         return read(ImportHeader.Key);
     }
 
-    public int getLevel() {
-        return readInt(ImportHeader.Level);
+    public String getLevel() {
+        return read(ImportHeader.Level);
     }
 
     public int getPriorityScore() {
