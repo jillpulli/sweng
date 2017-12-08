@@ -30,7 +30,7 @@ implements Iterable<T> {
 
     @Override
     public double getCurrentSize() {
-        if (currentSize < 0.0)
+        if (currentSize <= 0.0)
             currentSize = items
                 .parallelStream()
                 .mapToDouble(AgileObject::getCurrentSize)
@@ -40,7 +40,7 @@ implements Iterable<T> {
 
     @Override
     public double getInCapacitySize() {
-        if (inCapacitySize < 0.0)
+        if (inCapacitySize <= 0.0)
             inCapacitySize = items
                 .parallelStream()
                 .mapToDouble(AgileObject::getInCapacitySize)

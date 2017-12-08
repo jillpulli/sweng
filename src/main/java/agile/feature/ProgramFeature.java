@@ -48,7 +48,7 @@ public class ProgramFeature extends Feature {
 
     @Override
     public double getCurrentSize() {
-        if (currentSize < 0.0)
+        if (currentSize <= 0.0)
             currentSize = projects
                 .values()
                 .parallelStream()
@@ -59,7 +59,7 @@ public class ProgramFeature extends Feature {
 
     @Override
     public double getInCapacitySize() {
-        if (inCapacitySize < 0.0)
+        if (inCapacitySize <= 0.0)
             inCapacitySize = projects
                 .values()
                 .parallelStream()

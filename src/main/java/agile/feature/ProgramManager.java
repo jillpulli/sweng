@@ -10,14 +10,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ProgramManager {
+
+    private Map<String, Program> programs = new HashMap<>();
+    private String[] projects;
 
     public static DataTable makeFeatPercentInMatrix(ProgramManager manager) {
         DataTable table =
             ExportTable
                 .getFeaturePercentTableBasis()
-                .addHeaders(manager.getProjectArray());
+                .addHeaders(manager.projects);
 
         manager.getPrograms().forEach(program ->
             program.addFeaturePercentTableRows(table));
@@ -25,6 +29,11 @@ public class ProgramManager {
         return table
             .sortByInt(ExportTable.PriorityScore.toString())
             .reverseRows();
+    }
+
+    public static DataTable makeInCapacitySizeTable(ProgramManager manager) {
+        return manager.makeProgramTable(agileObj ->
+            Long.toString(Math.round(agileObj.getInCapacitySize())));
     }
 
     public static DataTable makeInOutPercentTable(ProgramManager manager) {
@@ -35,9 +44,6 @@ public class ProgramManager {
         return manager.makeProgramTable(agileObj ->
             Long.toString(Math.round(agileObj.getCurrentSize())));
     }
-
-    private Map<String, Program> programs = new HashMap<>();
-    private Set<String> projects = new HashSet<>();
 
     public int getNumberOfFeatures() {
         return programs
@@ -56,25 +62,28 @@ public class ProgramManager {
         return program.add(feature);
     }
 
-    public boolean addProject(String project) {
-        return projects.add(project);
+    void buildProjectArray() {
+        projects =
+            programs
+                .values()
+                .stream()
+                .flatMap(program -> program.getProjects().stream())
+                .map(Project::getName)
+                .distinct()
+                .collect(Collectors.toList())
+                .toArray(new String[0]);
+        Arrays.sort(projects);
     }
 
     private Collection<Program> getPrograms() {
         return programs.values();
     }
 
-    private String[] getProjectArray() {
-        String[] projectArray = projects.toArray(new String[0]);
-        Arrays.sort(projectArray);
-        return projectArray;
-    }
-
     private DataTable makeProgramTable(Function<AgileObject, String> function) {
         DataTable table =
             ExportTable
                 .getProgramTableBasis()
-                .addHeaders(getProjectArray());
+                .addHeaders(projects);
 
         for (Program program : programs.values())
             program.addProgramTableRow(table.addRow(), function);

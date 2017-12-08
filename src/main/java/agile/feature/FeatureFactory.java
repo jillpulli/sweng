@@ -32,10 +32,8 @@ public class FeatureFactory {
                         (currentProgram = createProgramFeature(current)));
                     break;
                 case 1:
-                    String project = current.getProject();
-                    manager.addProject(project);
                     isUnique = currentProgram.addFeature(
-                        project,
+                        current.getProject(),
                         (currentProduct = createProductFeature(current)));
                     break;
                 case 2:
@@ -50,6 +48,8 @@ public class FeatureFactory {
             if (!isUnique)
                 logSkip(current, logger, "Duplicate");
         }
+
+        manager.buildProjectArray();
 
         logger.info(String.format(
             "Created %d features from %d records.",
