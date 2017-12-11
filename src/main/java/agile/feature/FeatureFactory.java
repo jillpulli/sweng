@@ -111,5 +111,5 @@ public class FeatureFactory {
             "Skipping record %s: %s", record.getKey(), reason));
     }
 
-    private FeatureFactory() { };
+    private FeatureFactory() { }
 }

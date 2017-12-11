@@ -89,5 +89,5 @@ public class Main {
         return true;
     }
 
-    private Main() { };
+    private Main() { }
 }
