@@ -48,6 +48,11 @@ public class Project extends AgileObject {
         return inCapacitySize;
     }
 
+    /**
+     * Returns the name of this Project.
+     *
+     * @return the name of this Project
+     */
     public String getName() {
         return name;
     }

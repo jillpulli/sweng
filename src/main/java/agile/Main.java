@@ -8,6 +8,7 @@ import agile.util.RecordsIO;
 import agile.util.TableException;
 
 import java.io.File;
+import java.lang.Thread;
 import java.util.List;
 
 public class Main {
@@ -44,15 +45,19 @@ public class Main {
         }
 
         ProgramManager manager = new ProgramManager();
-
         FeatureFactory.assemblePrograms(manager, records, LOGGER);
 
-        LOGGER.info("Exporting the following files to " + args[1] + ':');
-        for (ExportFile file : ExportFile.values()) {
-            String name = file.getName();
-            RecordsIO.exportRecords(args[1] + name, file.makeTable(manager));
-            LOGGER.log("\t" + name);
-        }
+        for (ExportFile file : ExportFile.values())
+            runExportThread(args[1], file, manager);
+    }
+
+    private static void runExportThread(String directory, ExportFile file,
+            ProgramManager manager) {
+        new Thread(() -> {
+            String path = directory + file.getName();
+            RecordsIO.exportRecords(path, file.makeTable(manager));
+            LOGGER.info("Exported " + path);
+        }).start();
     }
 
     private static boolean verifyFiles(String... pathNames) {
@@ -84,5 +89,5 @@ public class Main {
         return true;
     }
 
-    private Main() { };
+    private Main() { }
 }

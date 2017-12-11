@@ -17,7 +17,7 @@ public class ProgramFeature extends Feature {
 
     /**
      * An out-of-capacity ProgramFeature with an empty string as the feature
-     * key and zeor current size.
+     * key and zero current size.
      */
     public static final ProgramFeature EMPTY_PROGRAM_FEATURE =
         new ProgramFeature("", "", 0, 0.0);
@@ -48,10 +48,10 @@ public class ProgramFeature extends Feature {
 
     @Override
     public double getCurrentSize() {
-        if (currentSize < 0.0)
+        if (currentSize <= 0.0)
             currentSize = projects
                 .values()
-                .parallelStream()
+                .stream()
                 .mapToDouble(AgileSet::getCurrentSize)
                 .sum();
         return currentSize;
@@ -59,10 +59,10 @@ public class ProgramFeature extends Feature {
 
     @Override
     public double getInCapacitySize() {
-        if (inCapacitySize < 0.0)
+        if (inCapacitySize <= 0.0)
             inCapacitySize = projects
                 .values()
-                .parallelStream()
+                .stream()
                 .mapToDouble(AgileSet::getInCapacitySize)
                 .sum();
         return inCapacitySize;
@@ -72,7 +72,7 @@ public class ProgramFeature extends Feature {
     public int getNumberOfFeatures() {
         return projects
             .values()
-            .parallelStream()
+            .stream()
             .mapToInt(AgileSet::getNumberOfFeatures)
             .sum() + 1;
     }
