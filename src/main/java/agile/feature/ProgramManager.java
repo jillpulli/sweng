@@ -58,16 +58,15 @@ public class ProgramManager {
     }
 
     void buildProjectArray() {
-        projects =
-            programs
-                .values()
-                .stream()
-                .flatMap(program -> program.getProjects().stream())
-                .map(Project::getName)
-                .distinct()
-                .collect(Collectors.toList())
-                .toArray(new String[0]);
-        Arrays.sort(projects);
+        projects = programs
+            .values()
+            .stream()
+            .flatMap(program -> program.getProjects().stream())
+            .map(Project::getName)
+            .distinct()
+            .sorted()
+            .collect(Collectors.toList())
+            .toArray(new String[0]);
     }
 
     private Collection<Program> getPrograms() {
