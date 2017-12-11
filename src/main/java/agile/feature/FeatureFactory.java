@@ -5,8 +5,35 @@ import agile.util.SimpleLogger;
 
 import java.util.List;
 
+/**
+ * A factory class for building Feature objects from data records.
+ * Capable of assembling the Feature hierarchy based on the Level value in
+ * each record.
+ */
 public class FeatureFactory {
 
+    /**
+     * Assembles the Feature hierarchy represented in the specified list of
+     * records and places it into the specified ProgramManager. Feature
+     * types are determined by the Level value in a given FeatureRecord. All
+     * features of a higher Level are stored in the previous feature of a lower
+     * level.
+     * <p>The levels go as follows:
+     * <ul>
+     *      <li><b>Level 0:</b> Program Feature</li>
+     *      <li><b>Level 1:</b> Product Feature</li>
+     *      <li><b>Level 2:</b> Team Feature</li>
+     * </ul>
+     *
+     * Once all viable Feature objects have been saved to the specified
+     * ProgramManager, the ProgramManager's record of all of its project
+     * names is initialized with a call to its <code>buildProjectArray()</code>
+     * method.
+     *
+     * @param manager the manager to which to save the Feature hierarchy
+     * @param records the records from which to create the Feature hierarchy
+     * @param logger the logger to log assembly progress, warnings, and errors
+     */
     public static void assemblePrograms(ProgramManager manager,
             List<FeatureRecord> records, SimpleLogger logger) {
         ProgramFeature currentProgram = ProgramFeature.EMPTY_PROGRAM_FEATURE;
@@ -83,4 +110,6 @@ public class FeatureFactory {
         logger.warning(String.format(
             "Skipping record %s: %s", record.getKey(), reason));
     }
+
+    private FeatureFactory() { };
 }

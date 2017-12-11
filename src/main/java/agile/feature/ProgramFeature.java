@@ -17,7 +17,7 @@ public class ProgramFeature extends Feature {
 
     /**
      * An out-of-capacity ProgramFeature with an empty string as the feature
-     * key and zeor current size.
+     * key and zero current size.
      */
     public static final ProgramFeature EMPTY_PROGRAM_FEATURE =
         new ProgramFeature("", "", 0, 0.0);

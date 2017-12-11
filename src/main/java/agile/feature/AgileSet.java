@@ -10,8 +10,10 @@ import java.util.stream.Stream;
 
 /**
  * A collection of AgileObjects that contains no duplicates. More formally,
- * AgileSet instances contain no pair of objects a1 and a2 such that
- * a1.equals(a2).
+ * AgileSet instances contain no pair of objects <code>a1</code> and
+ * <code>a2</code> such that <code>a1.equals(a2)</code>.
+ *
+ * @param <T> the type of AgileObjects in this set
  */
 public class AgileSet<T extends AgileObject> extends AgileObject
 implements Iterable<T> {
@@ -20,10 +22,20 @@ implements Iterable<T> {
     private double inCapacitySize = 0.0;
     private Set<T> items = new HashSet<>();
 
+    /**
+     * AgileSet Constructor with zero initial current size.
+     * Creates an empty AgileSet with a current size of zero.
+     */
     public AgileSet() {
         currentSize = 0.0;
     }
 
+    /**
+     * AgileSet Constructor with a specified initial current size.
+     * Creates an empty AgileSet with the specified current size value.
+     *
+     * @param initialCurrentSize this AgileSet's initial current size value
+     */
     public AgileSet(double initialCurrentSize) {
         currentSize = initialCurrentSize;
     }
@@ -60,6 +72,11 @@ implements Iterable<T> {
      * Adds the specified AgileObject to this set if it is not already present.
      * If the set already contains the object, the call leaves the set unchanged
      * and returns false.
+     * <p><b>Implementation Note</b><br>
+     * A successful add operation results in this AgileSet's internal current
+     * size and incapacity size fields being set to a negative number. This is
+     * done in order to flag the agile size retrieval methods to recalculate
+     * the values on the next call.</p>
      *
      * @param item the object to be added to this set
      * @return true if this set did not already contain the specified object
@@ -73,6 +90,12 @@ implements Iterable<T> {
         return addSuccessful;
     }
 
+    /**
+     * Performs the given action for each element of this AgileSet until all
+     * elements have been processed or the action throws an exception.
+     *
+     * @param action the action to be performed for each element
+     */
     @Override
     public void forEach(Consumer<? super T> action) {
         items.forEach(action);
@@ -87,6 +110,11 @@ implements Iterable<T> {
         return items.isEmpty();
     }
 
+    /**
+     * Returns an iterator over elements of type T.
+     *
+     * @return an Iterator
+     */
     @Override
     public Iterator<T> iterator() {
         return items.iterator();
@@ -101,11 +129,22 @@ implements Iterable<T> {
         return items.size();
     }
 
+    /**
+     * Creates a Spliterator over the elements described by this Iterable.
+     *
+     * @return a Spliterator over the elements described by this Iterable
+     */
     @Override
     public Spliterator<T> spliterator() {
         return items.spliterator();
     }
 
+    /**
+     * Returns a sequential Stream with this AgileSet's collection of
+     * AgileObjects as its source.
+     *
+     * @return a sequential Stream over the elements in this collection
+     */
     public Stream<T> stream() {
         return items.stream();
     }

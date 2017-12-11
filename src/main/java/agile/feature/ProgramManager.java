@@ -3,15 +3,16 @@ package agile.feature;
 import agile.util.DataTable;
 import agile.util.ExportTable;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
+/**
+ * Represents a collection of Program objects. This class contains various
+ * methods for generating DataTables based the Programs contained within a
+ * given ProgramManager.
+ */
 public class ProgramManager {
 
     private Map<String, Program> programs = new HashMap<>();
@@ -40,11 +41,16 @@ public class ProgramManager {
             Long.toString(Math.round(agileObj.getCurrentSize())));
     }
 
+    /**
+     * Returns the total number of Features in this ProgramManager.
+     *
+     * @return the total number of Features in this ProgramManager
+     */
     public int getNumberOfFeatures() {
         return programs
             .values()
             .stream()
-            .mapToInt(AgileObject::getNumberOfFeatures)
+            .mapToInt(Program::getNumberOfFeatures)
             .sum();
     }
 
@@ -65,8 +71,7 @@ public class ProgramManager {
             .map(Project::getName)
             .distinct()
             .sorted()
-            .collect(Collectors.toList())
-            .toArray(new String[0]);
+            .toArray(String[]::new);
     }
 
     private Collection<Program> getPrograms() {
