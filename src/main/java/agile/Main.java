@@ -11,6 +11,7 @@ import java.io.File;
 import java.lang.Thread;
 import java.util.List;
 
+
 public class Main {
 
     private static final SimpleLogger LOGGER = new SimpleLogger(System.out);
@@ -30,6 +31,8 @@ public class Main {
      * @param args the import file and export director file paths
      */
     public static void main(String[] args) {
+
+
         if (!verifyFiles(args)) return;
 
         List<FeatureRecord> records;

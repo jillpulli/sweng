@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.control.TextField;
 
 /*
  *  This window will show up as a warning
@@ -23,15 +24,20 @@ import javafx.stage.Stage;
  */
 public class ReImportWarning
 {
-    public static void display()
+    public static boolean display()
     {
-        Button okayButton = new Button("close");
-        okayButton.setStyle("-fx-padding: 10 30 10 30;");
-        okayButton.setTooltip(new Tooltip(".."));
+        Boolean wantsToReImport = false;
+        TextField boolString = new TextField();
+        Button reimport = new Button("Import");
+        reimport.setStyle("-fx-padding: 10 30 10 30;");
 
-       // Image HoneyBadgerWaiting = new Image("/src/main/HoneyBadgerFlags.png", 130, 130, false, false);
+        Button cancel = new Button("Close");
+        cancel.setStyle("-fx-padding: 10 30 10 30;");
+
+
+        // Image HoneyBadgerWaiting = new Image("/src/main/HoneyBadgerFlags.png", 130, 130, false, false);
         //Label picture = new Label();
-       // picture.setGraphic(new ImageView(HoneyBadgerWaiting));
+        // picture.setGraphic(new ImageView(HoneyBadgerWaiting));
 
         /*
          * This is Top
@@ -41,34 +47,23 @@ public class ReImportWarning
         top.setSpacing(15);
         top.setStyle("-fx-background-color:  #154c83;");
 
-        /*
-        * This is the center
-        */
-        VBox leftCenter = new VBox();
-        leftCenter.setSpacing(18);
-        //leftCenter.getChildren().add(picture);
-
         VBox centerCenter = new VBox();
         centerCenter.setSpacing(18);
-        Text msg = new Text("Error: No CSV has been uploaded.");
+        Text msg = new Text("      Are you sure you want to Import again? \n      Any matrices created will disappear forever. \n      If you would like to keep some matrices, \n      Export them before importing again. \n");
         msg.setFont(Font.font("Times New Roman", 14));
         centerCenter.setStyle("-fx-background-color:  #f5f5f5;");
         centerCenter.getChildren().add(msg);
-        Text msg2 = new Text("Honey Badger Cassandra is confused.");
-        msg2.setFont(Font.font("Times New Roman", 14));
-        centerCenter.setStyle("-fx-background-color:  #f5f5f5;");
-        centerCenter.getChildren().add(msg2);
-        centerCenter.getChildren().add(okayButton);
+        centerCenter.getChildren().add(reimport);
+        centerCenter.getChildren().add(cancel);
         centerCenter.setAlignment(Pos.CENTER);
 
         VBox rightCenter = new VBox();
         rightCenter.setPadding(new Insets(10, 10, 10, 10));
         rightCenter.setSpacing(18);
-       // rightCenter.getChildren().add(picture);
+        //rightCenter.getChildren().add(picture);
 
         BorderPane center = new BorderPane();
         center.setRight(rightCenter);
-        center.setLeft(leftCenter);
         center.setCenter(centerCenter);
 
         /*
@@ -87,18 +82,30 @@ public class ReImportWarning
         border.setCenter(center);
         border.setBottom(bottom);
 
+
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setMinWidth(300);
         window.setMinHeight(200);
 
-        Scene scene = new Scene(border, 400, 200);
+        /*
+         * Gives the functionality to cancel button
+         */
+        cancel.setOnAction( e -> window.close());
+
+        /*
+         * Gives the functionality to  button
+         */
+        reimport.setOnAction( e -> {
+            boolString.setText("true");
+            window.close();
+        });
+
+        Scene scene = new Scene(border, 525, 350);
         window.setScene(scene);
         window.showAndWait();
 
-        /*
-         * Give the buttons functionality
-         */
-        okayButton.setOnAction( e ->window.close());
+        wantsToReImport = Boolean.parseBoolean(boolString.getText());
+        return  wantsToReImport;
     }
 }
