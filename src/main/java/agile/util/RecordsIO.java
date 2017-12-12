@@ -14,8 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Provides a set of methods for importing and exporting CSV files.
+ */
 public class RecordsIO {
 
+    /**
+     * Imports the file specified by the given path. For a successful import,
+     * the file must be of CSV format and must contain the column headers
+     * specified by the <code>ImportHeaders</code> Enum type.
+     *
+     * @param pathname the path to the file to be imported
+     * @return a
+     */
     public static List<FeatureRecord> importRecords(String pathname) {
         List<FeatureRecord> records = new ArrayList<>();
 
