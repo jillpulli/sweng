@@ -28,9 +28,9 @@ public class FilePathErrorBox
         okayButton.setStyle("-fx-padding: 10 30 10 30;");
         okayButton.setTooltip(new Tooltip(".."));
 
-        Image HoneyBadgerWaiting = new Image("src/main/HoneyBadgerWaves.png", 130, 130, false, false);
-        Label picture = new Label();
-        picture.setGraphic(new ImageView(HoneyBadgerWaiting));
+        //Image HoneyBadgerWaiting = new Image("/src/main/HoneyBadgerWaves.png", 130, 130, false, false);
+        //Label picture = new Label();
+        //picture.setGraphic(new ImageView(HoneyBadgerWaiting));
 
         /*
          * This is Top
@@ -45,7 +45,7 @@ public class FilePathErrorBox
         */
         VBox leftCenter = new VBox();
         leftCenter.setSpacing(18);
-        leftCenter.getChildren().add(picture);
+        //leftCenter.getChildren().add(picture);
 
         VBox centerCenter = new VBox();
         centerCenter.setSpacing(18);
@@ -63,7 +63,7 @@ public class FilePathErrorBox
         VBox rightCenter = new VBox();
         rightCenter.setPadding(new Insets(10, 10, 10, 10));
         rightCenter.setSpacing(18);
-        rightCenter.getChildren().add(picture);
+        //rightCenter.getChildren().add(picture);
 
         BorderPane center = new BorderPane();
         center.setRight(rightCenter);

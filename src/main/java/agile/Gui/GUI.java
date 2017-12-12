@@ -115,11 +115,11 @@ public class GUI extends Application
          */
         StackPane center = new StackPane();
         // load the image
-        waitingHoneyBadger = new Image("src/main/HoneyBadgerWaiting.png", 750, 531, false, false);
-        Label centerPhoto = new Label();
-        centerPhoto.setGraphic(new ImageView(waitingHoneyBadger));
-        centerPhoto.setTooltip(new Tooltip("Honey Badger Cassandra is waiting for a CSV to be uploaded.."));
-        center.getChildren().add(centerPhoto);
+        //waitingHoneyBadger = new Image("src/main/HoneyBadgerWaiting.png", 750, 531, false, false);
+        //Label centerPhoto = new Label();
+       // centerPhoto.setGraphic(new ImageView(waitingHoneyBadger));
+       // centerPhoto.setTooltip(new Tooltip("Honey Badger Cassandra is waiting for a CSV to be uploaded.."));
+        //center.getChildren().add(centerPhoto);
 
         /*
          * This is the panel for the main window
