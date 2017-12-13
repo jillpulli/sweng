@@ -7,6 +7,12 @@ import agile.util.SimpleLogger;
 import agile.util.RecordsIO;
 import agile.util.TableException;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 import java.io.File;
 import java.lang.Thread;
 import java.util.List;
@@ -14,30 +20,61 @@ import java.util.List;
 public class Main {
 
     private static final SimpleLogger LOGGER = new SimpleLogger(System.out);
+    private static final Options OPTIONS = new Options()
+        .addOption("g", "gui", false, "open the generated user interface")
+        .addOption("h", "help", false, "print this message and exit")
+        .addOption("i", "input", true, "path to an import file")
+        .addOption("o", "output", true, "path to export directory");
 
-    /**
-     * Imports a CSV file, generates the feature relationships, and
-     * exports all spreadsheets to the specified directory.
-     *
-     * Usage is specified by the following paths:
-     * <ul>
-     * <li>First argument (<code>args[0]</code>) : path to import file.
-     *     Must be a file.</li>
-     * <li>Second argument (<code>args[1]</code>) : path to export directory.
-     *     Must be a directory.</li>
-     * </ul>
-     *
-     * @param args the import file and export director file paths
-     */
     public static void main(String[] args) {
-        if (!verifyFiles(args)) return;
+        CommandLine cmd;
+        try {
+            cmd = new DefaultParser().parse(OPTIONS, args);
+        }
+        catch (ParseException ex) {
+            LOGGER.error("Problem parsing command line arguments.");
+            LOGGER.error(ex.getMessage());
+            return;
+        }
+
+        if (args.length == 0 || cmd.hasOption('h'))
+            printHelpAndExit();
+
+        if (cmd.hasOption('g')) {
+            //TODO Put the GUI's launch() method here.
+            return;
+        }
+
+        if (!cmd.hasOption('i')) {
+            LOGGER.error("No import file given.");
+            return;
+        }
+
+        if (!cmd.hasOption('o')) {
+            LOGGER.error("No export file given.");
+            return;
+        }
+
+        File inFile = new File(cmd.getOptionValue('i'));
+        if (!inFile.isFile()) {
+            LOGGER.error(String.format(
+                "Cannot read from '%s': No such file", inFile.getName()));
+            return;
+        }
+
+        File outFile = new File(cmd.getOptionValue('o'));
+        if (!outFile.isDirectory()) {
+            LOGGER.error(String.format(
+                "Cannot export files to '%s': Not a directory",
+                outFile.getName()));
+            return;
+        }
 
         List<FeatureRecord> records;
         try {
-            File inFile = new File(args[0]);
             LOGGER.info("Reading feature data from " +
                 inFile.getAbsolutePath());
-            records = RecordsIO.importRecords(args[0]);
+            records = RecordsIO.importRecords(inFile);
         }
         catch (TableException ex) {
             LOGGER.error(ex.getMessage());
@@ -48,45 +85,21 @@ public class Main {
         FeatureFactory.assemblePrograms(manager, records, LOGGER);
 
         for (ExportFile file : ExportFile.values())
-            runExportThread(args[1], file, manager);
+            runExportThread(outFile, file, manager);
     }
 
-    private static void runExportThread(String directory, ExportFile file,
+    private static void printHelpAndExit() {
+        new HelpFormatter().printHelp("java -jar <agile JAR name>", OPTIONS);
+        System.exit(-1);
+    }
+
+    private static void runExportThread(File directory, ExportFile expFile,
             ProgramManager manager) {
         new Thread(() -> {
-            String path = directory + file.getName();
-            RecordsIO.exportRecords(path, file.makeTable(manager));
-            LOGGER.info("Exported " + path);
+            File target = new File(directory, expFile.getName());
+            RecordsIO.exportRecords(target, expFile.makeTable(manager));
+            LOGGER.info("Exported " + target.getAbsolutePath());
         }).start();
-    }
-
-    private static boolean verifyFiles(String... pathNames) {
-        if (pathNames.length == 0) {
-            LOGGER.error("No file names given.");
-            return false;
-        }
-
-        if (pathNames.length < 2) {
-            LOGGER.error("Not enough files given.");
-            return false;
-        }
-
-        File inFile = new File(pathNames[0]);
-        if (!inFile.isFile()) {
-            LOGGER.error(String.format(
-                "Cannot read from '%s': No such file", pathNames[0]));
-            return false;
-        }
-
-        File outFile = new File(pathNames[1]);
-        if (!outFile.isDirectory()) {
-            LOGGER.error(String.format(
-                "Cannot export files to '%s': Not a directory",
-                pathNames[1]));
-            return false;
-        }
-
-        return true;
     }
 
     private Main() { }
