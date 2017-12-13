@@ -16,6 +16,8 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import javafx.scene.layout.GridPane;
 import static javafx.geometry.Pos.CENTER;
+import javafx.stage.DirectoryChooser;
+import agile.Gui.Controller;
 
 /*
  * This is GUI FRONT END
@@ -35,8 +37,9 @@ public class GUI extends Application
     Boolean FTPercentMatrixExported = false;
     Boolean TotalSizeMatrixExported = false;
     Boolean InOutMatrixExported = false;
+    Controller controller;
 
-    Image waitingHoneyBadger;
+    //Image waitingHoneyBadger;
 
     Button ImportButton = new Button();
     Button FTPercentInMatrixButton = new Button();
@@ -47,6 +50,7 @@ public class GUI extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+       controller = new Controller();
         primaryStage.setTitle("Agile Visualization Tool");
 
         /*
@@ -149,6 +153,7 @@ public class GUI extends Application
                 FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
                 fileChooser.getExtensionFilters().add(extensionFilter);
                 file = fileChooser.showOpenDialog(primaryStage);
+                controller.getImported(file);
                 if (file != null)
                     imported = true;
             }
@@ -165,18 +170,9 @@ public class GUI extends Application
          */
         ExportButton.setOnAction(e ->
         {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save CSV File");
-            FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-            fileChooser.getExtensionFilters().add(extensionFilter);
-            File file = fileChooser.showSaveDialog(primaryStage);
-
-            if (file != null) {
-                System.out.println("File selected: " + file.getName());
-            }
-            else {
-                System.out.println("File selection cancelled.");
-            }
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            File selectedDirectory = directoryChooser.showDialog(primaryStage);
+            controller.getExported(selectedDirectory);
         });
 
         /*
