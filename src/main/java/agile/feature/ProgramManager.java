@@ -1,7 +1,7 @@
 package agile.feature;
 
 import agile.util.DataTable;
-import agile.util.ExportTable;
+import agile.util.ExportHeader;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class ProgramManager {
 
     public static DataTable makeFeatPercentInMatrix(ProgramManager manager) {
         DataTable table =
-            ExportTable
+            ExportHeader
                 .getFeaturePercentTableBasis()
                 .addHeaders(manager.projects);
 
@@ -28,7 +28,7 @@ public class ProgramManager {
             program.addFeaturePercentTableRows(table));
 
         return table
-            .sortByInt(ExportTable.PriorityScore.toString())
+            .sortByInt(ExportHeader.PriorityScore.toString())
             .reverseRows();
     }
 
@@ -80,13 +80,13 @@ public class ProgramManager {
 
     private DataTable makeProgramTable(Function<AgileObject, String> function) {
         DataTable table =
-            ExportTable
+            ExportHeader
                 .getProgramTableBasis()
                 .addHeaders(projects);
 
         for (Program program : programs.values())
             program.addProgramTableRow(table.addRow(), function);
 
-        return table.sortBy(ExportTable.Program.toString());
+        return table.sortBy(ExportHeader.Program.toString());
     }
 }

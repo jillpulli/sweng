@@ -1,7 +1,7 @@
 package agile.feature;
 
 import agile.util.DataTable;
-import agile.util.ExportTable;
+import agile.util.ExportHeader;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -68,7 +68,7 @@ public class Program extends AgileSet<ProgramFeature> {
                 feature.addFeaturePercentEntries(
                     table
                         .addRow()
-                        .insertCell(ExportTable.Program.toString(), name)));
+                        .insertCell(ExportHeader.Program.toString(), name)));
 
         return table;
     }
@@ -86,9 +86,9 @@ public class Program extends AgileSet<ProgramFeature> {
     public DataTable addProgramTableRow(DataTable table,
             Function<AgileObject, String> function) {
         table
-            .insertCell(ExportTable.Program.toString(), name)
+            .insertCell(ExportHeader.Program.toString(), name)
             .insertCell(
-                ExportTable.Total.toString(),
+                ExportHeader.Total.toString(),
                 function.apply(this));
 
         getProjects().forEach(project ->
