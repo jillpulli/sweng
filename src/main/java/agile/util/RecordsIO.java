@@ -4,9 +4,9 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,15 +14,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Provides a set of methods for importing and exporting CSV files.
+ */
 public class RecordsIO {
 
-    public static List<FeatureRecord> importRecords(String pathname) {
+    /**
+     * Imports the file specified by the given path. For a successful import,
+     * the file must be of CSV format and must contain the column headers
+     * specified by the <code>ImportHeaders</code> Enum type.
+     *
+     * @param pathname the path to the file to be imported
+     * @return a
+     */
+    public static List<FeatureRecord> importRecords(File file) {
         List<FeatureRecord> records = new ArrayList<>();
 
         try (CSVParser parser = CSVFormat
                 .EXCEL
                 .withFirstRecordAsHeader()
-                .parse(new BufferedReader(new FileReader(pathname)))) {
+                .parse(new BufferedReader(new FileReader(file)))) {
             verifyHeaders(parser);
             for (CSVRecord record : parser) {
                 FeatureRecord feat = new FeatureRecord(record.toMap());
@@ -37,7 +48,7 @@ public class RecordsIO {
         return records;
     }
 
-    public static void exportRecords(String target, DataTable table) {
+    public static void exportRecords(File target, DataTable table) {
         try (CSVPrinter printer = new CSVPrinter(
                 new BufferedWriter(
                     new FileWriter(target)),

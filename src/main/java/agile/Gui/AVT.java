@@ -39,6 +39,7 @@ public class AVT
     Button TotalSizeMatrixButton = new Button();
     Button InOutMatrix = new Button();
     Button ExportButton = new Button();
+    Button ExportAllButton = new Button();
 
     // Border Declaration
     BorderPane border = new BorderPane();
@@ -80,7 +81,8 @@ public class AVT
         InOutMatrix.setTooltip(new Tooltip("Give Honey Badger Cassandra this matrix to put together."));
         ExportButton.setText("Export CSV");
         ExportButton.setStyle("-fx-padding: 15 30 15 30;");
-
+        ExportAllButton.setText("Export All CSVs");
+        ExportAllButton.setStyle("-fx-padding: 15 30 15 30;");
     }
 
     /*
@@ -247,6 +249,16 @@ public class AVT
 
         /*
          * Gives the Export Button Functionality
+         * For now this should just add this to the arguments and call the controllers main passing these arguements
+         */
+        ExportButton.setOnAction(e ->
+        {
+            File file = getExportFile();
+            controller.getExportFile(file);
+        });
+
+        /*
+         * Gives the Export All Button Functionality
          * For now this should just add this to the arguments and call the controllers main passing these arguements
          */
         ExportButton.setOnAction(e ->
