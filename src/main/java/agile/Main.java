@@ -7,7 +7,10 @@ import agile.util.SimpleLogger;
 import agile.util.RecordsIO;
 import agile.util.TableException;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
 
 import java.io.File;
 import java.lang.Thread;
