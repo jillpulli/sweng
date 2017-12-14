@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import static javafx.geometry.Pos.CENTER_LEFT;
 import javafx.stage.FileChooser;
 import javafx.stage.DirectoryChooser;
+import javafx.application.Application;
 
 import java.io.File;
 /*
@@ -23,17 +24,20 @@ import java.io.File;
  * RU SURE PAGE ALL PREVIOUS MATRICES WILL BE FORGOTTEN UNLESS EXPORTED
  * NEEDS TO REST EVERYTHING
  */
-public class GUI
+public class GUI extends Application
 {
-    public static void display(Stage primaryStage)
+
+    Controller controller = new Controller();
+    Button ImportButton = new Button();
+    Button ExportButton = new Button();
+
+    @Override
+    public void start(Stage primaryStage) throws Exception
     {
-        Button ImportButton = new Button();
         ImportButton.setText("Upload");
         ImportButton.setStyle("-fx-padding: 15 40 15 40;");
-        Button ExportButton = new Button();
         ExportButton.setText("Export");
         ExportButton.setStyle("-fx-padding: 15 40 15 40;");
-        Controller controller = new Controller();
         // Border Declaration
         BorderPane border = new BorderPane();
 
@@ -83,11 +87,6 @@ public class GUI
         window.setMinHeight(200);
         window.setResizable(false);
 
-        Scene scene = new Scene(border, 265, 315);
-        window.setScene(scene);
-        window.showAndWait();
-
-
 
 
         ImportButton.setOnAction(e ->
@@ -111,5 +110,9 @@ public class GUI
             File selectedDirectory = directoryChooser.showDialog(primaryStage);
             controller.getExported(selectedDirectory);
         });
+
+        Scene scene = new Scene(border, 265, 315);
+        window.setScene(scene);
+        window.showAndWait();
     }
 }

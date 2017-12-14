@@ -41,8 +41,7 @@ public class Main {
 
         if (cmd.hasOption('g')) {
             GUI theView = new GUI();
-            Stage primaryStage = new Stage();
-            theView.display(primaryStage);
+            theView.launch();
             return;
         }
 
