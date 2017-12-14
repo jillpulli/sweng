@@ -56,7 +56,6 @@ public class ImportBox
             {
                 filePath.setText(CSVPath.getText() + " is the path we are importing.");
                 //s = CSVPath.getText();
-                FilePathErrorBox.display();
             }
             else
             {

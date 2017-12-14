@@ -8,6 +8,7 @@ import agile.util.SimpleLogger;
 import agile.util.RecordsIO;
 import agile.util.TableException;
 
+import javafx.application.Application;
 import javafx.stage.Stage;
 
 import org.apache.commons.cli.*;
@@ -40,8 +41,7 @@ public class Main {
             printHelpAndExit();
 
         if (cmd.hasOption('g')) {
-            GUI theView = new GUI();
-            theView.launch();
+            Application.launch(GUI.class, args);
             return;
         }
 

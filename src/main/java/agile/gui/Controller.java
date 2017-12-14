@@ -13,7 +13,6 @@ import agile.feature.FeatureFactory;
 
 public class Controller
 {
-    AVT theView = new AVT();
     ProgramManager theModel = new ProgramManager();
     File importedFile;
     File exportFile;
