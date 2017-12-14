@@ -1,11 +1,14 @@
 package agile;
 
+import agile.gui.GUI;
 import agile.feature.FeatureFactory;
 import agile.feature.ProgramManager;
 import agile.util.FeatureRecord;
 import agile.util.SimpleLogger;
 import agile.util.RecordsIO;
 import agile.util.TableException;
+
+import javafx.stage.Stage;
 
 import org.apache.commons.cli.*;
 
@@ -37,7 +40,9 @@ public class Main {
             printHelpAndExit();
 
         if (cmd.hasOption('g')) {
-            //TODO Put the GUI's launch() method here.
+            GUI theView = new GUI();
+            Stage primaryStage = new Stage();
+            theView.display(primaryStage);
             return;
         }
 

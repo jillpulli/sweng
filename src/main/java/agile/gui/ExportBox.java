@@ -1,58 +1,50 @@
-package agile.Gui;
+package agile.gui;
 
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
+import javafx.scene.text.TextAlignment;
 
-import java.io.File;
-import java.nio.file.*;
-import java.io.File.*;
-
-public class ImportBox
+public class ExportBox
 {
-    public static Label display (String title, String message) {
-
+    public static Label display (String title, String message)
+    {
         String defaultPath = "C://Stephanie/Desktop/";
 
         final Label filePath = new Label();
-        Stage window = new Stage();
-
-        TextField CSVPath = new TextField();
-        CSVPath.setPrefWidth(100);
-        CSVPath.setPromptText("CSV Import Path Here.");
-
         /*
-         * Creates the primary stage which is referenced as Window
+         * Creates the Window also known as the primaryStage
          */
+        Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setMinWidth(300);
         window.setMinHeight(200);
 
         /*
-         * Creates the buttons and other features
+         * Creates the buttons and features
          */
-        Label label = new Label();
-        label.setText(message);
-
-        Button importButton = new Button("Import");
-        importButton.setStyle("-fx-padding: 10 30 10 30;");
-        importButton.setTooltip(new Tooltip("Retrieves the CSV located from the File Path provided."));
+        Button exportButton = new Button("Export");
+        exportButton.setStyle("-fx-padding: 10 30 10 30;");
+        exportButton.setTooltip(new Tooltip("Transfers the matrix as a CSV to the location provided."));
 
         Button cancelButton = new Button("Cancel");
         cancelButton.setStyle("-fx-padding: 10 30 10 30;");
         cancelButton.setTooltip(new Tooltip("Exits out of the window."));
 
+        TextField CSVPath = new TextField();
+        CSVPath.setPromptText("CSV Export Path Here.");
+        CSVPath.setPrefWidth(100);
+
         /*
-         * Gives Buttons Functionality
+         * Gives buttons their functionaility
          */
-        importButton.setOnAction( e ->
+        exportButton.setOnAction( e ->
         {
             String s;
             System.out.println(CSVPath.getText());
@@ -60,7 +52,6 @@ public class ImportBox
             {
                 filePath.setText(CSVPath.getText() + " is the path we are importing.");
                 //s = CSVPath.getText();
-                FilePathErrorBox.display();
             }
             else
             {
@@ -68,15 +59,17 @@ public class ImportBox
                 CSVPath.setText(defaultPath);
             }
 
-
             window.close();
         }) ;
 
         cancelButton.setOnAction( e -> window.close());
 
+        /*
+         * Where all the buttons are
+         */
         VBox infoBox = new VBox();
+        infoBox.getChildren().addAll( CSVPath, exportButton, cancelButton, filePath);
         infoBox.setSpacing(18);
-        infoBox.getChildren().addAll(label, CSVPath, importButton, cancelButton,filePath);
         infoBox.setAlignment(Pos.CENTER);
 
         /*
@@ -95,15 +88,14 @@ public class ImportBox
         /*
          * Main GUI's design
          */
-        BorderPane mainImportGUI = new BorderPane();
-        mainImportGUI.setTop(top);
-        mainImportGUI.setCenter(infoBox);
+        BorderPane mainExportGUI = new BorderPane();
+        mainExportGUI.setTop(top);
+        mainExportGUI.setCenter(infoBox);
 
-        Scene scene = new Scene(mainImportGUI, 500, 250);
+        Scene scene = new Scene(mainExportGUI, 500, 250);
         window.setScene(scene);
         window.showAndWait();
 
         return filePath;
-
     }
 }

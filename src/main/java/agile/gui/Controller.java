@@ -1,21 +1,15 @@
-package agile.Gui;
+package agile.gui;
 
 import agile.util.*;
-import javafx.application.Application;
-import javafx.stage.Stage;
 import agile.feature.ProgramManager;
 
 import java.io.File;
 import agile.util.DataTable;
 import agile.ExportFile;
-import javafx.scene.layout.GridPane;
-import javafx.scene.control.Label;
-import javafx.scene.text.Font;
+
 import java.util.List;
-import javafx.geometry.HPos;
+
 import agile.feature.FeatureFactory;
-import agile.ExportFile;
-import java.awt.event.ActionListener;
 
 public class Controller
 {

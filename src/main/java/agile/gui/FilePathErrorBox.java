@@ -1,4 +1,4 @@
-package agile.Gui;
+package agile.gui;
 
 import javafx.scene.Scene;
 import javafx.scene.text.*;
@@ -10,7 +10,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.geometry.*;
-import javafx.scene.image.*;
 
 /*
  * Bug: Want to upload a new file after importing a file
