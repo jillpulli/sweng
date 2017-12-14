@@ -1,6 +1,5 @@
 .DS_STORE
 .idea/
-bin/
 doc/
 target/
 .drivers

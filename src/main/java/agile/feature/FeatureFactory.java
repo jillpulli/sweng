@@ -1,7 +1,7 @@
 package agile.feature;
 
 import agile.util.FeatureRecord;
-import agile.util.SimpleLogger;
+import agile.util.TableException;
 
 import java.util.List;
 
@@ -32,25 +32,15 @@ public class FeatureFactory {
      *
      * @param manager the manager to which to save the Feature hierarchy
      * @param records the records from which to create the Feature hierarchy
-     * @param logger the logger to log assembly progress, warnings, and errors
      */
     public static void assemblePrograms(ProgramManager manager,
-            List<FeatureRecord> records, SimpleLogger logger) {
+            List<FeatureRecord> records) {
         ProgramFeature currentProgram = ProgramFeature.EMPTY_PROGRAM_FEATURE;
         ProductFeature currentProduct = ProductFeature.EMPTY_PRODUCT_FEATURE;
-        int index = 0;
-        int numberOfRecords = records.size();
-        FeatureRecord current;
 
-        while (index < numberOfRecords &&
-                !(current = records.get(index)).getLevel().equals("0")) {
-            logSkip(current, logger, "No parent Program Feature");
-            index++;
-        }
-
-        while (index < numberOfRecords) {
-            current = records.get(index++);
-            boolean isUnique = false;
+        for (int index = 0, size = records.size(); index < size; index++) {
+            FeatureRecord current = records.get(index);
+            boolean isUnique;
 
             switch (current.getLevel()) {
                 case "0":
@@ -68,19 +58,14 @@ public class FeatureFactory {
                         currentProduct.addFeature(createTeamFeature(current));
                     break;
                 default:
-                    isUnique = true;
-                    logSkip(current, logger, "Bad 'Level' value");
+                    throw new TableException("Bad 'Level' value", index);
             }
 
             if (!isUnique)
-                logSkip(current, logger, "Duplicate");
+                throw new TableException("Duplicate feature detected", index);
         }
 
         manager.buildProjectArray();
-
-        logger.info(String.format(
-            "Created %d features from %d records.",
-            manager.getNumberOfFeatures(), numberOfRecords));
     }
 
     private static ProductFeature createProductFeature(FeatureRecord record) {
@@ -103,12 +88,6 @@ public class FeatureFactory {
             record.getKey(),
             record.getInCapacity(),
             record.getCurrentSize());
-    }
-
-    private static void logSkip(FeatureRecord record, SimpleLogger logger,
-            String reason) {
-        logger.warning(String.format(
-            "Skipping record %s: %s", record.getKey(), reason));
     }
 
     private FeatureFactory() { }

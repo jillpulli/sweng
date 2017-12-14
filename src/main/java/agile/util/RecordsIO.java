@@ -41,8 +41,12 @@ public class RecordsIO {
             verifyHeaders(parser);
             for (CSVRecord record : parser) {
                 FeatureRecord feat = new FeatureRecord(record.toMap());
-                if (!feat.getKey().isEmpty())
-                    records.add(feat);
+                if (feat.getKey().isEmpty())
+                    // Line number offset is 2.
+                    // One for header and one for current would-be feature
+                    throw new TableException(
+                        "Empty feature key: LINE " + (records.size() + 2));
+                records.add(feat);
             }
         }
         catch (IOException ex) {
@@ -85,6 +89,6 @@ public class RecordsIO {
         for (ImportHeader ih : ImportHeader.values())
             if (!headers.contains(ih.toString()))
                 throw new TableException(
-                    "Import file does not contain '" + ih + "' column.");
+                    "Import file does not contain '" + ih + "' column");
     }
 }

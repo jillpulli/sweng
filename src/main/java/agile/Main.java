@@ -23,7 +23,6 @@ public class Main {
     private static final SimpleLogger LOGGER = new SimpleLogger(text ->
         System.out.println(text));
     private static final Options OPTIONS = new Options()
-        .addOption("g", "gui", false, "open the generated user interface")
         .addOption("h", "help", false, "print this message and exit")
         .addOption("i", "input", true, "path to an import file")
         .addOption("o", "output", true, "path to export directory");
@@ -34,7 +33,7 @@ public class Main {
             cmd = new DefaultParser().parse(OPTIONS, args);
         }
         catch (ParseException ex) {
-            LOGGER.error("Problem parsing command line arguments.");
+            LOGGER.error("Problem parsing command line arguments");
             LOGGER.error(ex.getMessage());
             return;
         }
@@ -42,18 +41,13 @@ public class Main {
         if (args.length == 0 || cmd.hasOption('h'))
             printHelpAndExit();
 
-        if (cmd.hasOption('g')) {
-            //TODO Put the GUI's launch() method here.
-            return;
-        }
-
         if (!cmd.hasOption('i')) {
-            LOGGER.error("No import file given.");
+            LOGGER.error("No import file given");
             return;
         }
 
         if (!cmd.hasOption('o')) {
-            LOGGER.error("No export file given.");
+            LOGGER.error("No export directory given");
             return;
         }
 
@@ -73,18 +67,21 @@ public class Main {
         }
 
         List<FeatureRecord> records;
+        ProgramManager manager = new ProgramManager();
         try {
             LOGGER.info("Reading feature data from " +
                 inFile.getAbsolutePath());
             records = RecordsIO.importRecords(inFile);
+            FeatureFactory.assemblePrograms(manager, records);
         }
         catch (TableException ex) {
             LOGGER.error(ex.getMessage());
             return;
         }
 
-        ProgramManager manager = new ProgramManager();
-        FeatureFactory.assemblePrograms(manager, records, LOGGER);
+        LOGGER.info(String.format(
+            "Created %d features from %d records",
+            manager.getNumberOfFeatures(), records.size()));
 
         for (ExportFile file : ExportFile.values())
             runExportThread(outFile, file, manager);

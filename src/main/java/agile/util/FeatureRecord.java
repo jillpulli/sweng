@@ -105,7 +105,10 @@ public class FeatureRecord {
      * @return the associated value
      */
     private String read(ImportHeader key) {
-        return record.get(key.toString());
+        String data = record.get(key.toString());
+        if (data != null)
+            return data;
+        throw new TableException("NULL value while reading " + key);
     }
 
     /**

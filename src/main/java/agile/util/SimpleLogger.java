@@ -45,13 +45,4 @@ public class SimpleLogger {
     public void log(String message) {
         out.println(message);
     }
-
-    /**
-     * Prints the specified message prepended by "WARNING:".
-     *
-     * @param message the message to print
-     */
-    public void warning(String message) {
-        log("WARNING: " + message);
-    }
 }

@@ -6,7 +6,7 @@ package agile.util;
  */
 public enum ExportHeader {
 
-    EmptyCell      (""),
+    EmptyCell      ("NA"),
     PriorityScore  ("Priority Score"),
     Program        ("CSL Programs"),
     ProgramKey     ("Program Feature Key"),
