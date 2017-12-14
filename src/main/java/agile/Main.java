@@ -3,6 +3,7 @@ package agile;
 import agile.feature.FeatureFactory;
 import agile.feature.ProgramManager;
 import agile.util.FeatureRecord;
+import agile.util.Printable;
 import agile.util.SimpleLogger;
 import agile.util.RecordsIO;
 import agile.util.TableException;
@@ -19,7 +20,8 @@ import java.util.List;
 
 public class Main {
 
-    private static final SimpleLogger LOGGER = new SimpleLogger(System.out);
+    private static final SimpleLogger LOGGER = new SimpleLogger(text ->
+        System.out.println(text));
     private static final Options OPTIONS = new Options()
         .addOption("g", "gui", false, "open the generated user interface")
         .addOption("h", "help", false, "print this message and exit")

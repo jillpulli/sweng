@@ -1,14 +1,12 @@
 package agile.util;
 
-import java.io.PrintStream;
-
 /**
  * Represents a logger for outputting different status messages. The target of
  * the output is determined by the logger's PrintStream.
  */
 public class SimpleLogger {
 
-    private PrintStream out;
+    private Printable out;
 
     /**
      * SimpleLogger Constructor.
@@ -17,7 +15,7 @@ public class SimpleLogger {
      *
      * @param out the output stream
      */
-    public SimpleLogger(PrintStream out) {
+    public SimpleLogger(Printable out) {
         this.out = out;
     }
 
